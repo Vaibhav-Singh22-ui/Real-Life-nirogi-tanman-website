@@ -13,7 +13,7 @@ type PractitionerCardProps = {
   rating: number;
   fee: string;
   availability: string;
-  image: string;
+  image: any;
   type: "doctor" | "yoga";
 };
 

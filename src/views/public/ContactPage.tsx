@@ -31,7 +31,7 @@ const ContactPage = () => {
   const [ticketSubject, setTicketSubject] = useState("");
 
   const handleObjectivesToggle = (obj: string) => {
-    setCorporateObjectives(prev => 
+    setCorporateObjectives(prev =>
       prev.includes(obj) ? prev.filter(item => item !== obj) : [...prev, obj]
     );
   };
@@ -48,7 +48,7 @@ const ContactPage = () => {
 
     setTimeout(() => {
       setSubmitting(false);
-      
+
       if (activeTab === "general") {
         setSuccessInfo({
           title: "Message Sent!",
@@ -68,7 +68,7 @@ const ContactPage = () => {
           desc: "Your support request has been logged. Under clinical guidelines, the coordinator desk will respond in the live chat within 12 minutes."
         });
         toast.success(`Ticket NT-TKT-${ticketNum} registered successfully!`);
-        
+
         // Save support active ticket state in localStorage to activate chat notifications
         localStorage.setItem("nirogi_active_ticket", JSON.stringify({
           id: `NT-TKT-${ticketNum}`,
@@ -300,15 +300,15 @@ const ContactPage = () => {
             </CardHeader>
             <CardContent className="p-0 space-y-4 text-sm text-muted-foreground font-medium">
               <p className="flex items-center gap-2.5">
-                <Phone className="h-4.5 w-4.5 text-primary" /> 
+                <Phone className="h-4.5 w-4.5 text-primary" />
                 +91 90000 12345
               </p>
               <p className="flex items-center gap-2.5">
-                <Mail className="h-4.5 w-4.5 text-primary" /> 
+                <Mail className="h-4.5 w-4.5 text-primary" />
                 support@nirogitanman.com
               </p>
               <p className="flex items-center gap-2.5 text-left leading-normal">
-                <MapPin className="h-4.5 w-4.5 text-primary shrink-0" /> 
+                <MapPin className="h-4.5 w-4.5 text-primary shrink-0" />
                 Sector 15, HSR Layout, Bengaluru, Karnataka, India - 560102
               </p>
 

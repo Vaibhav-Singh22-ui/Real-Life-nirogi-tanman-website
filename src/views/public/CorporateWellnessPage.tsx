@@ -136,7 +136,7 @@ const CorporateWellnessPage = () => {
             <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">Corporate Wellness FAQs</h2>
           </div>
           
-          <div className="bg-white border border-border p-5 rounded-3xl shadow-sm">
+          <div className="bg-white border border-border p-5 rounded-2xl shadow-sm">
             <Accordion type="single" collapsible className="w-full">
               {faqs.map((faq, idx) => (
                 <AccordionItem key={idx} value={`item-${idx}`} className="border-b border-border last:border-b-0 py-1">

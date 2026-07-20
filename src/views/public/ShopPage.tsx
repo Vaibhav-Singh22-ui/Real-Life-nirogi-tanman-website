@@ -194,11 +194,22 @@ const ShopPage = () => {
   const [trackerResult, setTrackerResult] = useState<any | null>(null);
   const [trackerLoading, setTrackerLoading] = useState(false);
 
+  const [isScrolled, setIsScrolled] = useState(false);
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentImgIndex((prev) => (prev + 1) % carouselImages.length);
     }, 5000);
-    return () => clearInterval(timer);
+    
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 60);
+    };
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const handleShopNowClick = () => {
@@ -251,7 +262,10 @@ const ShopPage = () => {
   return (
     <div className="font-['Plus_Jakarta_Sans',sans-serif] bg-[#F8FAF7] min-h-screen pb-20">
       {/* E-commerce Sub-Header Bar (Sticky) */}
-      <div className="sticky top-16 z-40 bg-white/95 backdrop-blur-md border-b border-border/80 py-3 shadow-sm select-none transition-all duration-300">
+      <div className={cn(
+        "sticky z-40 bg-white/95 backdrop-blur-md border-b border-border/80 py-3 shadow-sm select-none transition-all duration-300",
+        isScrolled ? "top-0" : "top-16"
+      )}>
         <div className="container max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           
           {/* Sub-Header Title & Store Category Shortcuts */}

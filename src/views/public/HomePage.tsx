@@ -34,10 +34,11 @@ import {
   ChevronDown,
   ChevronUp,
   Loader2,
+  MessageSquare,
 } from "lucide-react";
 import Link from "next/link";
-import nirogiHero from "@/assets/nirogi-hero.jpg";
-import nirogiHero2 from "@/assets/nirogi-hero-2.jpg";
+import nirogiHero from "@/assets/nirogi-hero.png";
+import nirogiHero2 from "@/assets/nirogi-hero-2.png";
 import nirogiYoga from "@/assets/nirogi-yoga.png";
 import nirogiYoga2 from "@/assets/nirogi-yoga-2.png";
 import nirogiNutrition from "@/assets/nirogi-nutrition.jpg";
@@ -436,7 +437,7 @@ const HomePage = () => {
           <span>
             UPCOMING APPOINTMENT: Your video session with {activeBooking.practitionerName} ({activeBooking.practitionerTitle}) is scheduled for {activeBooking.date} at {activeBooking.timeSlot}.
           </span>
-          <Button variant="ghost" size="xs" className="bg-amber-950 text-white hover:bg-amber-900 border border-amber-800 rounded-lg text-[10px] font-extrabold px-3 py-1.5 shrink-0" asChild>
+          <Button variant="ghost" size="sm" className="bg-amber-950 text-white hover:bg-amber-900 border border-amber-800 rounded-lg text-[10px] font-extrabold px-3 py-1.5 shrink-0" asChild>
             <Link href="/patient/dashboard">Join Consultation Room</Link>
           </Button>
         </div>
@@ -521,7 +522,7 @@ const HomePage = () => {
               </div>
             </motion.div>
           </AnimatePresence>
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-transparent z-10 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent z-15 pointer-events-none" />
 
           {/* Slide Indicators */}
           <div className="absolute bottom-6 left-1/2 flex w-[80%] -translate-x-1/2 items-center justify-center gap-2 z-30">
@@ -577,7 +578,7 @@ const HomePage = () => {
               <svg viewBox="0 0 240 240" className="w-full max-w-[280px] h-auto drop-shadow-md">
                 {/* Circular feedback track */}
                 <circle cx="120" cy="120" r="75" fill="none" stroke="currentColor" className="text-primary/15" strokeWidth="2.5" />
-                <circle cx="120" cy="120" r="75" fill="none" stroke="currentColor" className="text-primary/40" strokeWidth="2.5" strokeDasharray="12,12" className="animate-spin duration-[40s] origin-center" />
+                <circle cx="120" cy="120" r="75" fill="none" stroke="currentColor" className="text-primary/40 animate-spin duration-[40s] origin-center" strokeWidth="2.5" strokeDasharray="12,12" />
 
                 {/* Central brand badge */}
                 <circle cx="120" cy="120" r="28" className="fill-card stroke-border" strokeWidth="1" />
@@ -611,6 +612,190 @@ const HomePage = () => {
                 </g>
               </svg>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Featured Healthcare Practitioners */}
+      <section className="section-band bg-background border-b border-border py-12 md:py-24">
+        <div className="container mx-auto px-4 sm:px-6 md:px-12 max-w-6xl">
+          {/* Trust Badges Banner */}
+          <div className="max-w-5xl mx-auto bg-muted/30 border border-border rounded-3xl p-5 sm:p-8 flex flex-col md:flex-row items-center justify-around gap-6 mb-16 text-center md:text-left">
+            <div className="space-y-1 max-w-xs">
+              <h4 className="text-base sm:text-lg font-bold text-foreground">Clinically Certified</h4>
+              <p className="text-muted-foreground text-xs font-medium">All healthcare practitioners are vetted prior to session onboarding.</p>
+            </div>
+            <div className="h-px w-full md:h-12 md:w-px bg-border" />
+            <div className="flex flex-wrap justify-center gap-6 md:gap-10">
+              <div className="flex items-center gap-2">
+                <Award className="h-5 w-5 text-primary" />
+                <span className="text-xs font-bold text-foreground">AYUSH Certified Teachers</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-primary" />
+                <span className="text-xs font-bold text-foreground">100% Verified MDs</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-5 w-5 text-primary" />
+                <span className="text-xs font-bold text-foreground">HIPAA Compliant Cloud</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+            <div>
+              <p className="uppercase-label text-primary font-bold tracking-widest text-xs mb-1.5">Trusted Experts</p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground tracking-tight">Featured Healthcare Doctors</h2>
+            </div>
+            <Button variant="outline" className="border-primary/20 text-primary hover:bg-primary/5 rounded-xl text-xs font-bold" asChild>
+              <Link href="/doctors">View All Doctors</Link>
+            </Button>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-16">
+            {doctors.slice(0, 3).map((doctor) => (
+              <motion.div key={doctor.id} whileHover={{ y: -6 }} transition={{ duration: 0.25 }}>
+                <PractitionerCard
+                  id={doctor.id}
+                  name={doctor.name}
+                  title={doctor.specialty}
+                  extraLabel="Experience"
+                  extraValue={doctor.experience}
+                  rating={doctor.rating}
+                  fee={doctor.fee}
+                  availability={doctor.availability}
+                  image={doctor.image}
+                  type="doctor"
+                />
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+            <div>
+              <p className="uppercase-label text-primary font-bold tracking-widest text-xs mb-1.5">Therapeutic Movement</p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground tracking-tight">Featured Yoga Specialists</h2>
+            </div>
+            <Button variant="outline" className="border-primary/20 text-primary hover:bg-primary/5 rounded-xl text-xs font-bold" asChild>
+              <Link href="/yoga-experts">View All Yoga Experts</Link>
+            </Button>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {yogaExperts.slice(0, 3).map((y) => (
+              <motion.div key={y.id} whileHover={{ y: -6 }} transition={{ duration: 0.25 }}>
+                <PractitionerCard
+                  id={y.id}
+                  name={y.name}
+                  title={`Yoga Therapist (${y.specialty})`}
+                  extraLabel="Sessions Delivered"
+                  extraValue={`${y.sessions}+ sessions`}
+                  rating={y.rating}
+                  fee="₹1,000"
+                  availability="Daily slots available"
+                  image={y.image}
+                  type="yoga"
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Nirogi AI Health Suite */}
+      <section className="section-band bg-[#FAF8F5] border-b border-border py-12 md:py-24">
+        <div className="container mx-auto px-4 sm:px-6 md:px-12 max-w-6xl">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+            <div>
+              <div className="uppercase-label text-primary font-bold tracking-widest text-xs mb-2">Smart Digital Care</div>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground tracking-tight">Nirogi AI Health Suite</h2>
+            </div>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-2">
+            <motion.div
+              whileHover={{ scale: 1.01, y: -6 }}
+              className="bg-card border border-border p-6 sm:p-8 rounded-3xl shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-300 flex flex-col justify-between"
+            >
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold tracking-wider uppercase bg-primary/10 text-primary px-2.5 py-1 rounded-full border border-primary/10">
+                    Vedic Baseline
+                  </span>
+                  <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
+                    <Cpu className="h-5 w-5" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold text-foreground">AI Dosha Assessment</h3>
+                  <p className="text-muted-foreground text-xs leading-relaxed">
+                    Establish your constitutional baseline by mapping your metabolic profile, sleep patterns, and daily habits.
+                  </p>
+                </div>
+                <ul className="space-y-2.5 text-xs text-muted-foreground">
+                  <li className="flex items-center gap-2">
+                    <Check className="h-3.5 w-3.5 text-primary shrink-0" />
+                    <span>Vata, Pitta & Kapha metric scales</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="h-3.5 w-3.5 text-primary shrink-0" />
+                    <span>15-Minute guided body constitution questions</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="h-3.5 w-3.5 text-primary shrink-0" />
+                    <span>Instant biological baseline report generation</span>
+                  </li>
+                </ul>
+              </div>
+              <Button className="w-full mt-8 bg-primary text-primary-foreground hover:bg-primary/95 text-xs font-bold rounded-xl py-5" asChild>
+                <Link href="/ai-dosha-assessment">
+                  Start Dosha Profiling
+                  <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                </Link>
+              </Button>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.01, y: -6 }}
+              className="bg-card border border-border p-6 sm:p-8 rounded-3xl shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-300 flex flex-col justify-between"
+            >
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold tracking-wider uppercase bg-primary/10 text-primary px-2.5 py-1 rounded-full border border-primary/10">
+                    24/7 Co-Pilot
+                  </span>
+                  <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
+                    <MessageSquare className="h-5 w-5" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold text-foreground">Nirogi AI Health Assistant</h3>
+                  <p className="text-muted-foreground text-xs leading-relaxed">
+                    Consult our advanced AI companion to design customized Ayurvedic diets, analyze lab reports, and log workouts.
+                  </p>
+                </div>
+                <ul className="space-y-2.5 text-xs text-muted-foreground">
+                  <li className="flex items-center gap-2">
+                    <Check className="h-3.5 w-3.5 text-primary shrink-0" />
+                    <span>Analyze blood test biomarkers and health logs</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="h-3.5 w-3.5 text-primary shrink-0" />
+                    <span>Generate custom low-glycemic dietary templates</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="h-3.5 w-3.5 text-primary shrink-0" />
+                    <span>Interactive Box Breathing timer logs</span>
+                  </li>
+                </ul>
+              </div>
+              <Button className="w-full mt-8 bg-primary text-primary-foreground hover:bg-primary/95 text-xs font-bold rounded-xl py-5" asChild>
+                <Link href="/ai-health-assistant">
+                  Access AI Assistant
+                  <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                </Link>
+              </Button>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -730,154 +915,43 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* 5. Explanation of the Wellness Approach */}
-      <section className="section-band bg-muted/10 border-b border-border py-12 md:py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/0.04),transparent_50%)]" />
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 max-w-5xl relative z-10">
-          <div className="max-w-3xl mx-auto text-center space-y-3 mb-16">
-            <div className="uppercase-label text-primary font-bold tracking-widest text-xs">Our Methodology</div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground tracking-tight">The Science Meets Heritage Loop</h2>
-          </div>
-
-          {/* Redesigned Methodology Cards */}
-          <motion.div
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-80px" }}
-            variants={{
-              hidden: {},
-              show: {
-                transition: {
-                  staggerChildren: 0.08,
-                },
-              },
-            }}
-            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-5xl mx-auto"
-          >
-            {approachSteps.map((step, idx) => (
-              <motion.div
-                key={step.number}
-                variants={{
-                  hidden: { opacity: 0, y: 25 },
-                  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 15 } }
-                }}
-                whileHover={{ y: -8 }}
-                className={cn(
-                  "bg-card border border-border/80 shadow-[0_8px_30px_rgba(0,0,0,0.015)] p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between min-h-[220px] hover:shadow-xl hover:border-primary/20 transition-all duration-300 group"
-                )}
-              >
-                {/* Background watermarked step number */}
-                <div className="absolute right-4 bottom-2 text-7xl font-extrabold text-foreground/[0.03] select-none pointer-events-none transition-transform duration-500 group-hover:scale-110">
-                  {step.number}
-                </div>
-
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-[10px] font-extrabold tracking-wider uppercase bg-primary/10 text-primary px-2.5 py-1 rounded-full border border-primary/10">
-                      Step {step.number}
-                    </span>
-                    <div className={cn("p-2.5 rounded-xl border flex items-center justify-center shrink-0", step.color)}>
-                      <step.icon className="h-5 w-5" />
-                    </div>
-                  </div>
-                  <h3 className="text-base sm:text-lg font-black text-foreground group-hover:text-primary transition-colors duration-300 leading-snug">
-                    {step.title}
-                  </h3>
-                  <p className="text-muted-foreground text-xs leading-relaxed mt-2.5">
-                    {step.description}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 6. Practitioner Credibility Section */}
-      <section className="section-band bg-background border-b border-border py-12 md:py-24">
+      {/* 9. Featured Products with Category Filters */}
+      <section className="section-band bg-muted/10 border-b border-border py-12 md:py-24">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 max-w-6xl">
-          {/* Trust Badges Banner */}
-          <div className="max-w-5xl mx-auto bg-muted/30 border border-border rounded-3xl p-5 sm:p-8 flex flex-col md:flex-row items-center justify-around gap-6 mb-16 text-center md:text-left">
-            <div className="space-y-1 max-w-xs">
-              <h4 className="text-base sm:text-lg font-bold text-foreground">Clinically Certified</h4>
-              <p className="text-muted-foreground text-xs font-medium">All healthcare practitioners are vetted prior to session onboarding.</p>
-            </div>
-            <div className="h-px w-full md:h-12 md:w-px bg-border" />
-            <div className="flex flex-wrap justify-center gap-6 md:gap-10">
-              <div className="flex items-center gap-2">
-                <Award className="h-5 w-5 text-primary" />
-                <span className="text-xs font-bold text-foreground">AYUSH Certified Teachers</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="h-5 w-5 text-primary" />
-                <span className="text-xs font-bold text-foreground">100% Verified MDs</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-primary" />
-                <span className="text-xs font-bold text-foreground">HIPAA Compliant Cloud</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
             <div>
-              <p className="uppercase-label text-primary font-bold tracking-widest text-xs mb-1.5">Trusted Experts</p>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground tracking-tight">Featured Healthcare Doctors</h2>
+              <p className="uppercase-label text-primary font-bold tracking-widest text-xs mb-1.5">Purified Supplements</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground tracking-tight">Featured Wellness Products</h2>
             </div>
-            <Button variant="outline" className="border-primary/20 text-primary hover:bg-primary/5 rounded-xl text-xs font-bold" asChild>
-              <Link href="/doctors">View All Doctors</Link>
+            <Button variant="outline" className="border-primary/20 text-primary hover:bg-primary/5 rounded-xl text-xs font-bold self-start sm:self-auto" asChild>
+              <Link href="/shop">Browse Store &rarr;</Link>
             </Button>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-16">
-            {doctors.slice(0, 3).map((doctor) => (
-              <motion.div key={doctor.id} whileHover={{ y: -6 }} transition={{ duration: 0.25 }}>
-                <PractitionerCard
-                  id={doctor.id}
-                  name={doctor.name}
-                  title={doctor.specialty}
-                  extraLabel="Experience"
-                  extraValue={doctor.experience}
-                  rating={doctor.rating}
-                  fee={doctor.fee}
-                  availability={doctor.availability}
-                  image={doctor.image}
-                  type="doctor"
-                />
-              </motion.div>
+          {/* Product Category Filters */}
+          <div className="flex flex-wrap gap-2.5 mb-8">
+            {["All", "Vitality", "Stress Relief", "Immunity"].map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${selectedCategory === cat ? 'bg-primary text-primary-foreground border-primary shadow-sm' : 'bg-card text-muted-foreground border-border hover:bg-muted/50 hover:text-foreground'}`}
+              >
+                {cat}
+              </button>
             ))}
-          </div>
-
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-            <div>
-              <p className="uppercase-label text-primary font-bold tracking-widest text-xs mb-1.5">Therapeutic Movement</p>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground tracking-tight">Featured Yoga Specialists</h2>
-            </div>
-            <Button variant="outline" className="border-primary/20 text-primary hover:bg-primary/5 rounded-xl text-xs font-bold" asChild>
-              <Link href="/yoga-experts">View All Yoga Experts</Link>
-            </Button>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {yogaExperts.slice(0, 3).map((y) => (
-              <motion.div key={y.id} whileHover={{ y: -6 }} transition={{ duration: 0.25 }}>
-                <PractitionerCard
-                  id={y.id}
-                  name={y.name}
-                  title={`Yoga Therapist (${y.specialty})`}
-                  extraLabel="Sessions Delivered"
-                  extraValue={`${y.sessions}+ sessions`}
-                  rating={y.rating}
-                  fee="₹1,000"
-                  availability="Daily slots available"
-                  image={y.image}
-                  type="yoga"
-                />
-              </motion.div>
+            {filteredProducts.map((prod) => (
+              <div key={prod.id} className="h-full">
+                <ProductCard product={prod} />
+              </div>
             ))}
           </div>
         </div>
       </section>
+
+
 
       {/* 7. Explanation of the Consultation Process */}
       <section className="section-band bg-muted/20 border-b border-border py-12 md:py-24">
@@ -1020,41 +1094,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* 9. Featured Products with Category Filters */}
-      <section className="section-band bg-muted/10 border-b border-border py-12 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 max-w-6xl">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
-            <div>
-              <p className="uppercase-label text-primary font-bold tracking-widest text-xs mb-1.5">Purified Supplements</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground tracking-tight">Featured Wellness Products</h2>
-            </div>
-            <Button variant="outline" className="border-primary/20 text-primary hover:bg-primary/5 rounded-xl text-xs font-bold self-start sm:self-auto" asChild>
-              <Link href="/shop">Browse Store &rarr;</Link>
-            </Button>
-          </div>
 
-          {/* Product Category Filters */}
-          <div className="flex flex-wrap gap-2.5 mb-8">
-            {["All", "Vitality", "Stress Relief", "Immunity"].map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${selectedCategory === cat ? 'bg-primary text-primary-foreground border-primary shadow-sm' : 'bg-card text-muted-foreground border-border hover:bg-muted/50 hover:text-foreground'}`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredProducts.map((prod) => (
-              <div key={prod.id} className="h-full">
-                <ProductCard product={prod} />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* 10. Corporate Wellness segment */}
       <section className="section-band bg-background border-b border-border py-12 md:py-24 overflow-hidden">
@@ -1113,54 +1153,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* 11. Testimonials Section (Pictorial) */}
-      <section className="section-band bg-muted/20 border-b border-border py-12 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 max-w-6xl">
-          <div className="max-w-3xl mx-auto text-center space-y-3 mb-16">
-            <div className="uppercase-label text-primary font-bold tracking-widest text-xs">Success Stories</div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground tracking-tight">Testimonials</h2>
-          </div>
-
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {patientTestimonials.map((test, idx) => (
-              <Card key={idx} className="surface-panel p-6 flex flex-col justify-between border-border bg-card shadow-sm hover:shadow-md transition-all">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex text-amber-500 gap-0.5">
-                      {[...Array(test.rating)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-amber-500 text-amber-500" />
-                      ))}
-                    </div>
-                    <Quote className="h-6 w-6 text-primary/10" />
-                  </div>
-                  <p className="text-muted-foreground text-xs leading-relaxed italic">
-                    "{test.review}"
-                  </p>
-                </div>
-                
-                <div className="pt-5 border-t border-border/60 mt-6 flex items-center gap-3.5">
-                  <div className="h-11 w-11 rounded-full overflow-hidden shrink-0 border border-primary/20 shadow-sm bg-muted">
-                    <img src={getImgSrc(test.avatar)} alt={test.name} className="h-full w-full object-cover" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-foreground leading-tight">
-                      {test.name}, <span className="text-xs font-normal text-muted-foreground">{test.age}</span>
-                    </h4>
-                    <span className="text-[10px] text-primary uppercase font-bold tracking-wider block mt-0.5">
-                      {test.condition}
-                    </span>
-                    <span className="text-[10px] text-[#DDA853] font-bold block mt-0.5">
-                      {test.stat}
-                    </span>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 12. Educational Resources (Latest Insights) */}
+      {/* 11. Educational Resources (Latest Insights) */}
       <section className="section-band bg-background border-b border-border py-12 md:py-24">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 max-w-6xl">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
@@ -1230,7 +1223,117 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* 13. FAQs Section */}
+      {/* 12. Explanation of the Wellness Approach */}
+      <section className="section-band bg-muted/10 border-b border-border py-12 md:py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/0.04),transparent_50%)]" />
+        <div className="container mx-auto px-4 sm:px-6 md:px-12 max-w-5xl relative z-10">
+          <div className="max-w-3xl mx-auto text-center space-y-3 mb-16">
+            <div className="uppercase-label text-primary font-bold tracking-widest text-xs">Our Methodology</div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground tracking-tight">The Science Meets Heritage Loop</h2>
+          </div>
+
+          {/* Redesigned Methodology Cards */}
+          <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-80px" }}
+            variants={{
+              hidden: {},
+              show: {
+                transition: {
+                  staggerChildren: 0.08,
+                },
+              },
+            }}
+            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-5xl mx-auto"
+          >
+            {approachSteps.map((step, idx) => (
+              <motion.div
+                key={step.number}
+                variants={{
+                  hidden: { opacity: 0, y: 25 },
+                  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 15 } }
+                }}
+                whileHover={{ y: -8 }}
+                className={cn(
+                  "bg-card border border-border/80 shadow-[0_8px_30px_rgba(0,0,0,0.015)] p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between min-h-[220px] hover:shadow-xl hover:border-primary/20 transition-all duration-300 group"
+                )}
+              >
+                {/* Background watermarked step number */}
+                <div className="absolute right-4 bottom-2 text-7xl font-extrabold text-foreground/[0.03] select-none pointer-events-none transition-transform duration-500 group-hover:scale-110">
+                  {step.number}
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[10px] font-extrabold tracking-wider uppercase bg-primary/10 text-primary px-2.5 py-1 rounded-full border border-primary/10">
+                      Step {step.number}
+                    </span>
+                    <div className={cn("p-2.5 rounded-xl border flex items-center justify-center shrink-0", step.color)}>
+                      <step.icon className="h-5 w-5" />
+                    </div>
+                  </div>
+                  <h3 className="text-base sm:text-lg font-black text-foreground group-hover:text-primary transition-colors duration-300 leading-snug">
+                    {step.title}
+                  </h3>
+                  <p className="text-muted-foreground text-xs leading-relaxed mt-2.5">
+                    {step.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 13. Testimonials Section (Pictorial) */}
+      <section className="section-band bg-muted/20 border-b border-border py-12 md:py-24">
+        <div className="container mx-auto px-4 sm:px-6 md:px-12 max-w-6xl">
+          <div className="max-w-3xl mx-auto text-center space-y-3 mb-16">
+            <div className="uppercase-label text-primary font-bold tracking-widest text-xs">Success Stories</div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground tracking-tight">Testimonials</h2>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {patientTestimonials.map((test, idx) => (
+              <Card key={idx} className="surface-panel p-6 flex flex-col justify-between border-border bg-card shadow-sm hover:shadow-md transition-all">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex text-amber-500 gap-0.5">
+                      {[...Array(test.rating)].map((_, i) => (
+                        <Star key={i} className="h-4 w-4 fill-amber-500 text-amber-500" />
+                      ))}
+                    </div>
+                    <Quote className="h-6 w-6 text-primary/10" />
+                  </div>
+                  <p className="text-muted-foreground text-xs leading-relaxed italic">
+                    "{test.review}"
+                  </p>
+                </div>
+                
+                <div className="pt-5 border-t border-border/60 mt-6 flex items-center gap-3.5">
+                  <div className="h-11 w-11 rounded-full overflow-hidden shrink-0 border border-primary/20 shadow-sm bg-muted">
+                    <img src={getImgSrc(test.avatar)} alt={test.name} className="h-full w-full object-cover" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-foreground leading-tight">
+                      {test.name}, <span className="text-xs font-normal text-muted-foreground">{test.age}</span>
+                    </h4>
+                    <span className="text-[10px] text-primary uppercase font-bold tracking-wider block mt-0.5">
+                      {test.condition}
+                    </span>
+                    <span className="text-[10px] text-[#DDA853] font-bold block mt-0.5">
+                      {test.stat}
+                    </span>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 14. FAQs Section */}
       <section className="section-band bg-muted/10 border-b border-border py-12 md:py-24">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 max-w-4xl">
           <Card className="surface-panel overflow-hidden border-border bg-card shadow-sm">

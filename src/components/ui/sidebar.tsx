@@ -27,6 +27,8 @@ type SidebarContext = {
   setOpenMobile: (open: boolean) => void;
   isMobile: boolean;
   toggleSidebar: () => void;
+  isHovered: boolean;
+  setIsHovered: (hovered: boolean) => void;
 };
 
 const SidebarContext = React.createContext<SidebarContext | null>(null);
@@ -50,6 +52,7 @@ const SidebarProvider = React.forwardRef<
 >(({ defaultOpen = true, open: openProp, onOpenChange: setOpenProp, className, style, children, ...props }, ref) => {
   const isMobile = useIsMobile();
   const [openMobile, setOpenMobile] = React.useState(false);
+  const [isHovered, setIsHovered] = React.useState(false);
 
   // This is the internal state of the sidebar.
   // We use openProp and setOpenProp for control from outside the component.
@@ -101,8 +104,10 @@ const SidebarProvider = React.forwardRef<
       openMobile,
       setOpenMobile,
       toggleSidebar,
+      isHovered,
+      setIsHovered,
     }),
-    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar],
+    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar, isHovered],
   );
 
   return (
@@ -136,7 +141,7 @@ const Sidebar = React.forwardRef<
     collapsible?: "offcanvas" | "icon" | "none";
   }
 >(({ side = "left", variant = "sidebar", collapsible = "offcanvas", className, children, ...props }, ref) => {
-  const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
+  const { isMobile, state, openMobile, setOpenMobile, isHovered, setIsHovered } = useSidebar();
 
   if (collapsible === "none") {
     return (
@@ -170,27 +175,35 @@ const Sidebar = React.forwardRef<
     );
   }
 
+  const isExpanded = state === "expanded" || (collapsible === "icon" && isHovered);
+  const resolvedState = isExpanded ? "expanded" : "collapsed";
+
   return (
     <div
       ref={ref}
       className="group peer hidden text-sidebar-foreground md:block"
-      data-state={state}
-      data-collapsible={state === "collapsed" ? collapsible : ""}
+      data-state={resolvedState}
+      data-collapsible={resolvedState === "collapsed" ? collapsible : ""}
       data-variant={variant}
       data-side={side}
     >
       {/* This is what handles the sidebar gap on desktop */}
       <div
         className={cn(
-          "relative h-svh w-[--sidebar-width] bg-transparent transition-[width] duration-200 ease-linear",
-          "group-data-[collapsible=offcanvas]:w-0",
-          "group-data-[side=right]:rotate-180",
-          variant === "floating" || variant === "inset"
-            ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4))]"
-            : "group-data-[collapsible=icon]:w-[--sidebar-width-icon]",
+          "relative h-svh bg-transparent transition-[width] duration-200 ease-linear",
+          side === "right" && "rotate-180",
+          state === "expanded" && "w-[--sidebar-width]",
+          collapsible === "offcanvas" && state === "collapsed" && "w-0",
+          collapsible === "icon" && state === "collapsed" && (
+            variant === "floating" || variant === "inset"
+              ? "w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4))]"
+              : "w-[--sidebar-width-icon]"
+          ),
         )}
       />
       <div
+        onMouseEnter={() => collapsible === "icon" && setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         className={cn(
           "fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] duration-200 ease-linear md:flex",
           side === "left"
@@ -442,7 +455,7 @@ const SidebarMenuButton = React.forwardRef<
   } & VariantProps<typeof sidebarMenuButtonVariants>
 >(({ asChild = false, isActive = false, variant = "default", size = "default", tooltip, className, ...props }, ref) => {
   const Comp = asChild ? Slot : "button";
-  const { isMobile, state } = useSidebar();
+  const { isMobile, state, isHovered } = useSidebar();
 
   const button = (
     <Comp
@@ -468,7 +481,7 @@ const SidebarMenuButton = React.forwardRef<
   return (
     <Tooltip>
       <TooltipTrigger asChild>{button}</TooltipTrigger>
-      <TooltipContent side="right" align="center" hidden={state !== "collapsed" || isMobile} {...tooltip} />
+      <TooltipContent side="right" align="center" hidden={state !== "collapsed" || isHovered || isMobile} {...tooltip} />
     </Tooltip>
   );
 });

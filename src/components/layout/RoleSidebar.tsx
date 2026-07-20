@@ -22,14 +22,15 @@ type RoleSidebarProps = {
 };
 
 const RoleSidebar = ({ role }: RoleSidebarProps) => {
-  const { state } = useSidebar();
+  const { state, isHovered } = useSidebar();
   const collapsed = state === "collapsed";
+  const isCollapsed = collapsed && !isHovered;
   const pathname = usePathname();
 
   return (
     <Sidebar collapsible="icon" variant="sidebar">
       <SidebarHeader className="border-b border-sidebar-border p-3">
-        <BrandMark compact={collapsed} />
+        <BrandMark compact={isCollapsed} />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -43,7 +44,7 @@ const RoleSidebar = ({ role }: RoleSidebarProps) => {
                     <SidebarMenuButton asChild tooltip={item.label} isActive={isActive}>
                       <Link href={item.path} className="flex items-center gap-2">
                         <item.icon className="h-4 w-4" />
-                        {!collapsed && <span>{item.label}</span>}
+                        {!isCollapsed && <span>{item.label}</span>}
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -54,7 +55,7 @@ const RoleSidebar = ({ role }: RoleSidebarProps) => {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="border-t border-sidebar-border p-3">
-        {!collapsed && <p className="text-xs text-sidebar-foreground/70">Nirogi Tanman Platform</p>}
+        {!isCollapsed && <p className="text-xs text-sidebar-foreground/70">Nirogi Tanman Platform</p>}
       </SidebarFooter>
     </Sidebar>
   );

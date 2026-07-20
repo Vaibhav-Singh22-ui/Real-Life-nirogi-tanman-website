@@ -543,26 +543,6 @@ const ServiceDetailPage = () => {
         </div>
       </section>
 
-      {/* 5. Consultation CTA */}
-      <section className="py-16 bg-primary text-primary-foreground relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,hsl(var(--secondary)/0.1),transparent_60%)]" />
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl text-center relative z-10 space-y-6">
-          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
-            Ready to Begin Your Wellness Program?
-          </h2>
-          <p className="text-white/80 font-light text-xs sm:text-sm leading-relaxed max-w-xl mx-auto">
-            Book a clinical profiling session today. Connect directly with MD physicians, Ayurvedic experts, and personal therapists under one dashboard.
-          </p>
-          <div className="flex justify-center gap-4 pt-2">
-            <Button size="lg" className="bg-[#DDA853] hover:bg-[#c9953d] text-primary-foreground font-extrabold text-xs sm:text-sm px-8 h-12 rounded-xl shadow-lg" asChild>
-              <Link href="/book-consultation">
-                Book Consultation Now
-                <ArrowRight className="ml-1.5 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
       
     </div>
   );

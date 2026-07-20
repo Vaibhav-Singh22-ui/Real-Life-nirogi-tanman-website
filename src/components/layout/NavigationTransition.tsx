@@ -163,7 +163,7 @@ export const NavigationTransition = ({ children }: NavigationTransitionProps) =>
         variants={{
           idle: {
             opacity: 1,
-            filter: "blur(0px)",
+            filter: "none",
             scale: 1,
           },
           animating: {
@@ -173,6 +173,7 @@ export const NavigationTransition = ({ children }: NavigationTransitionProps) =>
           },
         }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        style={!showTransition ? { transform: "none", filter: "none" } : undefined}
         className="w-full h-full min-h-screen flex flex-col"
       >
         {/* Reveal Destination Page using key path tracking to trigger slide transition */}
@@ -181,6 +182,7 @@ export const NavigationTransition = ({ children }: NavigationTransitionProps) =>
           initial={shouldAnimateDestination ? { opacity: 0, y: 16 } : false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          style={!showTransition ? { transform: "none" } : undefined}
           className="flex-1 flex flex-col"
         >
           {children}

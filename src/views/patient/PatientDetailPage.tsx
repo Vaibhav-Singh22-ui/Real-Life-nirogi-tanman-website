@@ -10,13 +10,25 @@ import {
   User, Mail, Phone, Calendar, Heart, ShieldAlert, 
   MapPin, Check, X, Camera, Activity, FileText, CheckCircle,
   Brain, MessageSquare, Compass, Settings, AlertTriangle,
-  Paperclip, Mic, Send, Play, Download, Eye
+  Paperclip, Mic, Send, Play, Download, Eye, Loader2
 } from "lucide-react";
 import { format } from "date-fns";
 import ApiKeyConfig from "@/components/app/ApiKeyConfig";
 import { generateGeminiContent } from "@/lib/gemini";
 import SharedSettingsView from "@/components/app/SharedSettingsView";
 import SharedNotificationsView from "@/components/app/SharedNotificationsView";
+import DietPlannerView from "@/components/patient/DietPlannerView";
+import YogaPlannerView from "@/components/patient/YogaPlannerView";
+import LifestylePlannerView from "@/components/patient/LifestylePlannerView";
+import SleepTrackerView from "@/components/patient/SleepTrackerView";
+import WaterIntakeView from "@/components/patient/WaterIntakeView";
+import PrescriptionsView from "@/components/patient/PrescriptionsView";
+import VitalsTrackerView from "@/components/patient/VitalsTrackerView";
+import MoodTrackerView from "@/components/patient/MoodTrackerView";
+import CalendarView from "@/components/patient/CalendarView";
+import ExerciseTrackerView from "@/components/patient/ExerciseTrackerView";
+import PaymentsView from "@/components/patient/PaymentsView";
+import MedicalReportsView from "@/components/patient/MedicalReportsView";
 
 type PatientDetailPageProps = {
   pageKey: PatientPageKey;
@@ -410,6 +422,54 @@ const PatientDetailPage = ({ pageKey }: PatientDetailPageProps) => {
 
   if (pageKey === "notifications") {
     return <SharedNotificationsView />;
+  }
+
+  if (pageKey === "diet-planner") {
+    return <DietPlannerView />;
+  }
+
+  if (pageKey === "yoga-planner") {
+    return <YogaPlannerView />;
+  }
+
+  if (pageKey === "lifestyle-planner") {
+    return <LifestylePlannerView />;
+  }
+
+  if (pageKey === "sleep-tracker") {
+    return <SleepTrackerView />;
+  }
+
+  if (pageKey === "water-intake") {
+    return <WaterIntakeView />;
+  }
+
+  if (pageKey === "prescriptions") {
+    return <PrescriptionsView />;
+  }
+
+  if (pageKey === "blood-pressure" || pageKey === "blood-sugar") {
+    return <VitalsTrackerView />;
+  }
+
+  if (pageKey === "mood") {
+    return <MoodTrackerView />;
+  }
+
+  if (pageKey === "calendar") {
+    return <CalendarView />;
+  }
+
+  if (pageKey === "exercise") {
+    return <ExerciseTrackerView />;
+  }
+
+  if (pageKey === "payments") {
+    return <PaymentsView />;
+  }
+
+  if (pageKey === "medical-reports") {
+    return <MedicalReportsView />;
   }
 
   if (pageKey === "health-reports") {

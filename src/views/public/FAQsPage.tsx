@@ -16,8 +16,8 @@ const FAQsPage = () => {
 
         <Accordion type="single" collapsible className="w-full space-y-3">
           {faqItems.map((item, index) => (
-            <AccordionItem key={item.question} value={`item-${index}`} className="rounded-lg border border-border bg-card px-5">
-              <AccordionTrigger className="text-left text-base text-foreground hover:no-underline">
+            <AccordionItem key={item.question} value={`item-${index}`} className="rounded-xl border border-border bg-card px-5 shadow-sm">
+              <AccordionTrigger className="text-left text-base text-foreground hover:no-underline py-4">
                 <span className="flex items-center gap-3">
                   <span className="rounded-md bg-primary/10 p-1.5 text-primary">
                     <CircleHelp className="h-4 w-4" />
@@ -25,7 +25,7 @@ const FAQsPage = () => {
                   {item.question}
                 </span>
               </AccordionTrigger>
-              <AccordionContent className="pb-5 pl-10 text-sm leading-relaxed text-muted-foreground">{item.answer}</AccordionContent>
+              <AccordionContent className="pb-5 pl-10 text-sm leading-relaxed text-muted-foreground border-t border-border/40 pt-3">{item.answer}</AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
