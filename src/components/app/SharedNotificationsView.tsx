@@ -104,17 +104,21 @@ const SharedNotificationsView = () => {
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
       {/* Header bar */}
-      <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-lg border border-border bg-hero-gradient">
-        <div className="space-y-1">
+      <section className="relative overflow-hidden rounded-2xl border border-border/80 bg-card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-10 dark:opacity-20 pointer-events-none"
+          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop')` }}
+        />
+        <div className="space-y-1 relative z-10">
           <p className="uppercase-label text-primary">Inbox Messages</p>
-          <h1 className="text-2xl font-semibold text-foreground flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <Bell className="h-5 w-5 text-primary" />
             Inbox & Alerts
           </h1>
-          <p className="text-sm text-muted-foreground">Stay informed on care plans revisions, lab details, and billing.</p>
+          <p className="text-xs text-muted-foreground">Stay informed on care plans revisions, lab details, and billing.</p>
         </div>
         {list.length > 0 && (
-          <div className="flex gap-2 shrink-0">
+          <div className="flex gap-2 shrink-0 relative z-10">
             <Button variant="outline" size="sm" onClick={markAllRead} className="text-xs h-9">
               <CheckCheck className="h-3.5 w-3.5 mr-1" /> Mark all read
             </Button>

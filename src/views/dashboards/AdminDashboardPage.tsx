@@ -69,15 +69,19 @@ const AdminDashboardPage = () => {
   return (
     <div className="space-y-6">
       {/* Welcome banner */}
-      <section className="grid grid-cols-1 gap-4 rounded-lg border border-border bg-hero-gradient p-6 lg:grid-cols-[1fr_auto] lg:items-center">
-        <div>
+      <section className="relative overflow-hidden rounded-2xl border border-border/80 bg-card p-6 grid grid-cols-1 gap-4 lg:grid-cols-[1fr_auto] lg:items-center shadow-sm">
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-10 dark:opacity-20 pointer-events-none"
+          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop')` }}
+        />
+        <div className="relative z-10">
           <p className="uppercase-label text-primary">Admin Command Center</p>
-          <h1 className="mt-2 text-3xl font-semibold text-foreground">System Governance Overview</h1>
-          <p className="mt-2 max-w-2xl text-muted-foreground">
+          <h1 className="mt-1 text-2xl font-bold text-foreground">System Governance Overview</h1>
+          <p className="mt-1 max-w-xl text-xs text-muted-foreground">
             Platform operations are running smoothly. System load and api latency are within target ranges.
           </p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto mt-2 lg:mt-0">
+        <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto mt-2 lg:mt-0 relative z-10">
           <Button variant="outline" asChild className="w-full sm:w-auto justify-center">
             <Link href="/admin/audit-logs">
               <Terminal className="h-4 w-4 mr-2" />

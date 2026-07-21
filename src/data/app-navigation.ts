@@ -5,6 +5,7 @@ import {
   BookOpen,
   Brain,
   Calendar,
+  Clock,
   ClipboardList,
   CreditCard,
   FileText,
@@ -109,51 +110,156 @@ export const patientSidebar: NavItem[] = [
   { label: "Payments", path: "/patient/payments", icon: CreditCard },
 ];
 
-export const doctorSidebar: NavItem[] = [
-  { label: "Dashboard", path: "/doctor/dashboard", icon: LayoutDashboard },
-  { label: "Appointments", path: "/doctor/appointments", icon: ClipboardList },
-  { label: "Patient Queue", path: "/doctor/patient-queue", icon: Users },
-  { label: "Availability", path: "/doctor/availability", icon: Calendar },
-  { label: "Revenue", path: "/doctor/revenue", icon: BadgeDollarSign },
-  { label: "Analytics", path: "/doctor/analytics", icon: TrendingUp },
-  { label: "Reports", path: "/doctor/reports", icon: FileText },
+export type NavGroup = {
+  groupLabel: string;
+  items: NavItem[];
+};
+
+export const doctorSidebarGroups: NavGroup[] = [
+  {
+    groupLabel: "Overview",
+    items: [
+      { label: "Dashboard", path: "/doctor/dashboard", icon: LayoutDashboard },
+      { label: "Today's Schedule", path: "/doctor/todays-schedule", icon: Clock },
+    ],
+  },
+  {
+    groupLabel: "Clinical OPD & Care",
+    items: [
+      { label: "Appointments", path: "/doctor/appointments", icon: ClipboardList },
+      { label: "Patient Queue", path: "/doctor/patient-queue", icon: Users },
+      { label: "Patient Details", path: "/doctor/patient-details", icon: UserRound },
+      { label: "Medical History", path: "/doctor/medical-history", icon: NotebookTabs },
+      { label: "Consultation Room", path: "/doctor/consultation", icon: Stethoscope },
+      { label: "Video Tele-Call", path: "/doctor/video-call", icon: Video },
+    ],
+  },
+  {
+    groupLabel: "Rx & Diagnostics",
+    items: [
+      { label: "Prescription Builder", path: "/doctor/prescription-builder", icon: Pill },
+      { label: "Clinical Notes", path: "/doctor/medical-notes", icon: FileText },
+      { label: "Reports", path: "/doctor/reports", icon: ClipboardList },
+    ],
+  },
+  {
+    groupLabel: "Practice & Earnings",
+    items: [
+      { label: "Availability", path: "/doctor/availability", icon: Calendar },
+      { label: "Revenue", path: "/doctor/revenue", icon: BadgeDollarSign },
+      { label: "Analytics", path: "/doctor/analytics", icon: TrendingUp },
+    ],
+  },
 ];
 
-export const yogaSidebar: NavItem[] = [
-  { label: "Dashboard", path: "/yoga/dashboard", icon: LayoutDashboard },
-  { label: "Patients", path: "/yoga/patients", icon: Users },
-  { label: "Routine Builder", path: "/yoga/yoga-routine-builder", icon: Waves },
-  { label: "Exercise Library", path: "/yoga/exercise-library", icon: Activity },
-  { label: "Meditation Sessions", path: "/yoga/meditation-sessions", icon: Moon },
-  { label: "Attendance", path: "/yoga/attendance", icon: ClipboardList },
-  { label: "Progress", path: "/yoga/progress", icon: TrendingUp },
+export const yogaSidebarGroups: NavGroup[] = [
+  {
+    groupLabel: "Overview",
+    items: [
+      { label: "Dashboard", path: "/yoga/dashboard", icon: LayoutDashboard },
+      { label: "Calendar", path: "/yoga/calendar", icon: Calendar },
+    ],
+  },
+  {
+    groupLabel: "Therapy & Students",
+    items: [
+      { label: "Patients", path: "/yoga/patients", icon: Users },
+      { label: "Attendance", path: "/yoga/attendance", icon: ClipboardList },
+      { label: "Progress", path: "/yoga/progress", icon: TrendingUp },
+    ],
+  },
+  {
+    groupLabel: "Asana & Routines",
+    items: [
+      { label: "Routine Builder", path: "/yoga/yoga-routine-builder", icon: Waves },
+      { label: "Exercise Library", path: "/yoga/exercise-library", icon: Activity },
+      { label: "Meditation Sessions", path: "/yoga/meditation-sessions", icon: Moon },
+    ],
+  },
 ];
 
-export const adminSidebar: NavItem[] = [
-  { label: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
-  { label: "Analytics", path: "/admin/analytics", icon: TrendingUp },
-  { label: "Revenue", path: "/admin/revenue", icon: BadgeDollarSign },
-  { label: "Users", path: "/admin/users", icon: Users },
-  { label: "Doctors", path: "/admin/doctors", icon: Stethoscope },
-  { label: "Yoga Instructors", path: "/admin/yoga-instructors", icon: Waves },
-  { label: "Appointments", path: "/admin/appointments", icon: Calendar },
-  { label: "Payments", path: "/admin/payments", icon: CreditCard },
-  { label: "Subscriptions", path: "/admin/subscriptions", icon: BadgeDollarSign },
-  { label: "CMS", path: "/admin/cms", icon: NotebookTabs },
-  { label: "Blogs", path: "/admin/blogs", icon: BookOpen },
-  { label: "FAQs", path: "/admin/faqs", icon: MessageSquare },
-  { label: "Testimonials", path: "/admin/testimonials", icon: Users },
-  { label: "Reports", path: "/admin/reports", icon: FileText },
-  { label: "Services", path: "/admin/services", icon: HeartPulse },
-  { label: "Support Tickets", path: "/admin/support-tickets", icon: LifeBuoy },
-  { label: "Roles", path: "/admin/roles", icon: ShieldCheck },
-  { label: "Permissions", path: "/admin/permissions", icon: ShieldCheck },
-  { label: "Audit Logs", path: "/admin/audit-logs", icon: FileText },
+export const patientSidebarGroups: NavGroup[] = [
+  {
+    groupLabel: "Overview",
+    items: [
+      { label: "Dashboard", path: "/patient/dashboard", icon: LayoutDashboard },
+      { label: "Bookings", path: "/patient/bookings", icon: Calendar },
+    ],
+  },
+  {
+    groupLabel: "Personal Wellness",
+    items: [
+      { label: "Profile", path: "/patient/profile", icon: UserRound },
+      { label: "Diet Planner", path: "/patient/diet-planner", icon: Utensils },
+      { label: "Yoga Planner", path: "/patient/yoga-planner", icon: Waves },
+      { label: "Lifestyle Planner", path: "/patient/lifestyle-planner", icon: Leaf },
+      { label: "Sleep Tracker", path: "/patient/sleep-tracker", icon: Moon },
+      { label: "Water Intake", path: "/patient/water-intake", icon: Activity },
+    ],
+  },
+  {
+    groupLabel: "Clinical Records",
+    items: [
+      { label: "Prescriptions", path: "/patient/prescriptions", icon: Pill },
+      { label: "Vitals Tracker", path: "/patient/vitals-tracker", icon: HeartPulse },
+      { label: "Mood Tracker", path: "/patient/mood", icon: HeartPulse },
+      { label: "Medical Reports", path: "/patient/medical-reports", icon: NotebookTabs },
+    ],
+  },
 ];
+
+export const adminSidebarGroups: NavGroup[] = [
+  {
+    groupLabel: "Overview",
+    items: [
+      { label: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
+      { label: "Analytics", path: "/admin/analytics", icon: TrendingUp },
+      { label: "Revenue", path: "/admin/revenue", icon: BadgeDollarSign },
+    ],
+  },
+  {
+    groupLabel: "User Management",
+    items: [
+      { label: "Users", path: "/admin/users", icon: Users },
+      { label: "Doctors", path: "/admin/doctors", icon: Stethoscope },
+      { label: "Yoga Instructors", path: "/admin/yoga-instructors", icon: Waves },
+      { label: "Appointments", path: "/admin/appointments", icon: Calendar },
+      { label: "Payments", path: "/admin/payments", icon: CreditCard },
+      { label: "Subscriptions", path: "/admin/subscriptions", icon: BadgeDollarSign },
+    ],
+  },
+  {
+    groupLabel: "Content & Support",
+    items: [
+      { label: "CMS", path: "/admin/cms", icon: NotebookTabs },
+      { label: "Blogs", path: "/admin/blogs", icon: BookOpen },
+      { label: "FAQs", path: "/admin/faqs", icon: MessageSquare },
+      { label: "Testimonials", path: "/admin/testimonials", icon: Users },
+      { label: "Reports", path: "/admin/reports", icon: FileText },
+      { label: "Services", path: "/admin/services", icon: HeartPulse },
+      { label: "Support Tickets", path: "/admin/support-tickets", icon: LifeBuoy },
+    ],
+  },
+  {
+    groupLabel: "System Security",
+    items: [
+      { label: "Roles", path: "/admin/roles", icon: ShieldCheck },
+      { label: "Permissions", path: "/admin/permissions", icon: ShieldCheck },
+      { label: "Audit Logs", path: "/admin/audit-logs", icon: FileText },
+    ],
+  },
+];
+
+export const roleSidebarGroups: Record<AppRole, NavGroup[]> = {
+  patient: patientSidebarGroups,
+  doctor: doctorSidebarGroups,
+  yoga: yogaSidebarGroups,
+  admin: adminSidebarGroups,
+};
 
 export const roleSidebars: Record<AppRole, NavItem[]> = {
-  patient: patientSidebar,
-  doctor: doctorSidebar,
-  yoga: yogaSidebar,
-  admin: adminSidebar,
+  patient: patientSidebarGroups.flatMap(g => g.items),
+  doctor: doctorSidebarGroups.flatMap(g => g.items),
+  yoga: yogaSidebarGroups.flatMap(g => g.items),
+  admin: adminSidebarGroups.flatMap(g => g.items),
 };

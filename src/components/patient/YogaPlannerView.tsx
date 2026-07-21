@@ -133,19 +133,23 @@ export default function YogaPlannerView() {
   return (
     <div className="space-y-6 font-['Manrope',sans-serif]">
       {/* Header */}
-      <section className="grid gap-4 rounded-lg border border-border bg-hero-gradient p-6 lg:grid-cols-[1fr_auto] lg:items-center">
-        <div>
+      <section className="relative overflow-hidden rounded-2xl border border-border/80 bg-card p-6 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center shadow-sm">
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-10 dark:opacity-20 pointer-events-none"
+          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=1200&auto=format&fit=crop')` }}
+        />
+        <div className="relative z-10">
           <p className="uppercase-label text-primary font-bold">Patient Workspace</p>
-          <h1 className="mt-2 text-3xl font-semibold text-foreground">Yoga Planner</h1>
-          <p className="mt-2 max-w-3xl text-muted-foreground">
+          <h1 className="mt-1 text-2xl font-bold text-foreground">Yoga Planner</h1>
+          <p className="mt-1 max-w-2xl text-xs text-muted-foreground">
             Follow customized, therapy-grade yoga sequences containing posture diagrams, breath pacing, and duration timers.
           </p>
         </div>
-        <div className="rounded-md border border-border bg-background/80 px-4 py-3 flex items-center gap-3">
-          <CheckCircle className="h-5 w-5 text-primary" />
+        <div className="relative z-10 rounded-xl border border-border/60 bg-background/90 p-3.5 flex items-center gap-3 backdrop-blur-sm">
+          <CheckCircle className="h-5 w-5 text-primary shrink-0" />
           <div>
-            <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground leading-none">Completed Sessions</p>
-            <p className="mt-1 text-sm font-extrabold text-foreground">{sessionsCompleted} routines</p>
+            <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">Active Protocol</p>
+            <p className="text-xs font-bold text-foreground">Spinal Flexibility & Vata Balance</p>
           </div>
         </div>
       </section>

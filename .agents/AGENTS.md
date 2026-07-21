@@ -54,3 +54,14 @@ This workspace customization file outlines the core coding mistakes made during 
   - Break long descriptions down into lists, cards, or grids with specific icons.
   - Balance side-by-side layout columns to ensure matching vertical heights.
 
+---
+
+## 8. Fixed Sidebar Positioning & Independent Content Scrolling
+- **Mistake**: Allowing the sidebar container to move along with page scrolling, making navigation buttons disappear as users scroll down.
+- **Root Cause**: Failing to enforce fixed viewport positioning on the dashboard sidebar container.
+- **Rule**:
+  - Dashboard navigation sidebars MUST always use fixed viewport height (`fixed inset-y-0 z-10 h-svh` or `sticky top-0 h-screen`) with internal scrolling (`overflow-y-auto` inside `SidebarContent`).
+  - Page vertical scrolling must ONLY affect the content beside the sidebar (`<SidebarInset>`), keeping the sidebar static and visible on screen at all times.
+
+
+

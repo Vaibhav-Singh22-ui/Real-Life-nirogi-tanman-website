@@ -19,6 +19,29 @@ export const NavigationTransition = ({ children }: NavigationTransitionProps) =>
   const failSafeTimerRef = useRef<NodeJS.Timeout | null>(null);
   const navigationStartRef = useRef<number>(0);
 
+  // Important landing pages that trigger navigation transition
+  const LANDING_PAGES = [
+    "/",
+    "/services",
+    "/doctors",
+    "/yoga-experts",
+    "/ai-health-assistant",
+    "/pricing",
+    "/book-consultation",
+  ];
+
+  // Helper to check if target URL is a main landing page
+  const isLandingPage = (targetUrl?: string | URL | null) => {
+    if (!targetUrl) return false;
+    try {
+      const nextUrl = new URL(targetUrl.toString(), window.location.href);
+      const cleanPath = nextUrl.pathname === "/" ? "/" : nextUrl.pathname.replace(/\/$/, "");
+      return LANDING_PAGES.includes(cleanPath);
+    } catch (e) {
+      return false;
+    }
+  };
+
   // Helper to determine if target URL is a new page (different pathname)
   const isNewPage = (targetUrl: string | URL | null | undefined) => {
     if (!targetUrl) return false;
@@ -32,9 +55,14 @@ export const NavigationTransition = ({ children }: NavigationTransitionProps) =>
   };
 
   // Triggered on page-to-page navigation start
-  const handleNavStart = () => {
+  const handleNavStart = (targetUrl?: string | URL | null) => {
     // Never run on initial visit loading screen
     if (isInitialLoading) return;
+
+    // Only play transition when navigating to a main landing page
+    if (!isLandingPage(targetUrl)) {
+      return;
+    }
 
     navigationStartRef.current = Date.now();
 
@@ -45,15 +73,13 @@ export const NavigationTransition = ({ children }: NavigationTransitionProps) =>
       clearTimeout(failSafeTimerRef.current);
     }
 
-    // Smart Trigger: Only play loader if navigation is slower than 150ms
-    startTimerRef.current = setTimeout(() => {
-      setShowTransition(true);
+    // Show transition overlay for landing page navigations
+    setShowTransition(true);
 
-      // 6-second fail-safe to prevent endless loading in case of navigation failure or abort
-      failSafeTimerRef.current = setTimeout(() => {
-        setShowTransition(false);
-      }, 6000);
-    }, 150);
+    // Stays on screen for 400ms max for a super-fast quick pulse transition
+    failSafeTimerRef.current = setTimeout(() => {
+      setShowTransition(false);
+    }, 400);
   };
 
   // Triggered when navigation completes (pathname or search parameters update)
@@ -62,16 +88,12 @@ export const NavigationTransition = ({ children }: NavigationTransitionProps) =>
       clearTimeout(startTimerRef.current);
       startTimerRef.current = null;
     }
-    if (failSafeTimerRef.current) {
-      clearTimeout(failSafeTimerRef.current);
-      failSafeTimerRef.current = null;
-    }
 
     const elapsed = Date.now() - navigationStartRef.current;
 
-    // Minimum play time of 350ms to ensure the pulse, sweep and fade transitions run cleanly
     if (showTransition) {
-      const minPlayTime = 350;
+      // Keep transition on screen for a very fast duration (~250ms - 300ms)
+      const minPlayTime = 250;
       const remainingTime = Math.max(0, minPlayTime - elapsed);
 
       setTimeout(() => {
@@ -105,7 +127,7 @@ export const NavigationTransition = ({ children }: NavigationTransitionProps) =>
           try {
             const targetUrl = new URL(href, window.location.href);
             if (targetUrl.pathname !== currentPath) {
-              handleNavStart();
+              handleNavStart(href);
             }
           } catch (err) {
             // Ignore parsing errors
@@ -120,7 +142,7 @@ export const NavigationTransition = ({ children }: NavigationTransitionProps) =>
       const targetUrl = args[2];
       if (isNewPage(targetUrl)) {
         setTimeout(() => {
-          handleNavStart();
+          handleNavStart(targetUrl);
         }, 0);
       }
       return originalPushState.apply(this, args);
@@ -131,7 +153,7 @@ export const NavigationTransition = ({ children }: NavigationTransitionProps) =>
       const targetUrl = args[2];
       if (isNewPage(targetUrl)) {
         setTimeout(() => {
-          handleNavStart();
+          handleNavStart(targetUrl);
         }, 0);
       }
       return originalReplaceState.apply(this, args);
@@ -202,25 +224,15 @@ export const NavigationTransition = ({ children }: NavigationTransitionProps) =>
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
             >
               {/* Frosted Glass Circle */}
               <motion.div
                 className="relative h-24 w-24 rounded-full border border-white/35 bg-white/10 backdrop-blur-md flex items-center justify-center shadow-lg overflow-hidden"
                 initial={{ opacity: 0, scale: 0.95 }}
-                animate={{
-                  opacity: 1,
-                  scale: [0.95, 1, 1.02, 1],
-                }}
+                animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                transition={{
-                  scale: {
-                    times: [0, 0.4, 0.7, 1],
-                    duration: 0.6,
-                    ease: [0.22, 1, 0.36, 1],
-                  },
-                  opacity: { duration: 0.25 },
-                }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
               >
                 {/* SVG Logo */}
                 <img

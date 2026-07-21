@@ -56,10 +56,16 @@ const SharedSettingsView = ({ roleLabel }: SharedSettingsViewProps) => {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto font-['Manrope',sans-serif]">
-      <section className="p-6 rounded-lg border border-border bg-hero-gradient">
-        <p className="uppercase-label text-primary font-bold">System Configurations</p>
-        <h1 className="text-2xl font-semibold text-foreground mt-1">{roleLabel} Preferences</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">Customize your account settings, alerts, and system display styles.</p>
+      <section className="relative overflow-hidden rounded-2xl border border-border/80 bg-card p-6 shadow-sm">
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-10 dark:opacity-20 pointer-events-none"
+          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop')` }}
+        />
+        <div className="relative z-10">
+          <p className="uppercase-label text-primary font-bold">System Configurations</p>
+          <h1 className="text-2xl font-bold text-foreground mt-1">{roleLabel} Preferences</h1>
+          <p className="text-xs text-muted-foreground mt-0.5">Customize your account settings, alerts, and system display styles.</p>
+        </div>
       </section>
 
       <div className="grid gap-6 md:grid-cols-[200px_1fr]">

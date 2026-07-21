@@ -1,4 +1,19 @@
-import { Brain, Calendar, ClipboardCheck, ArrowUpRight, Sparkles, Filter, Activity, Waves, Moon } from "lucide-react";
+import {
+  Brain,
+  Calendar,
+  ClipboardCheck,
+  ArrowUpRight,
+  Sparkles,
+  Filter,
+  Activity,
+  Waves,
+  Moon,
+  Users,
+  CheckCircle2,
+  UserCheck,
+  Clock,
+  HeartPulse,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import StatCard from "@/components/app/StatCard";
@@ -22,10 +37,42 @@ import {
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Legend } from "recharts";
 
 const statsData = [
-  { title: "Sessions Today", value: "9", change: "+2 vs daily average", trend: "up" },
-  { title: "Attendance Rate", value: "92%", change: "+4% vs last week", trend: "up" },
-  { title: "Active Program Blocks", value: "16", change: "Therapeutic classes", trend: "neutral" },
-  { title: "Evaluations Due", value: "11", change: "This week", trend: "neutral" },
+  {
+    title: "Sessions Today",
+    value: "9",
+    change: "+2 vs daily average",
+    trend: "up" as const,
+    icon: Waves,
+    graphVariant: "wave" as const,
+    accentColor: "emerald" as const,
+  },
+  {
+    title: "Attendance Rate",
+    value: "92%",
+    change: "+4% vs last week",
+    trend: "up" as const,
+    icon: Users,
+    graphVariant: "circle" as const,
+    accentColor: "teal" as const,
+  },
+  {
+    title: "Active Program Cohorts",
+    value: "16",
+    change: "Therapeutic classes",
+    trend: "neutral" as const,
+    icon: Activity,
+    graphVariant: "bars" as const,
+    accentColor: "indigo" as const,
+  },
+  {
+    title: "Evaluations Due",
+    value: "11",
+    change: "This week",
+    trend: "neutral" as const,
+    icon: ClipboardCheck,
+    graphVariant: "area" as const,
+    accentColor: "amber" as const,
+  },
 ];
 
 const sessionsList = [
@@ -68,33 +115,60 @@ const YogaDashboardPage = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Welcome banner */}
-      <section className="grid grid-cols-1 gap-4 rounded-lg border border-border bg-hero-gradient p-6 lg:grid-cols-[1fr_auto] lg:items-center">
-        <div>
-          <p className="uppercase-label text-primary">Yoga Instructor Workspace</p>
-          <h1 className="mt-2 text-3xl font-semibold text-foreground">Namaste, Arjun Dev</h1>
-          <p className="mt-2 max-w-2xl text-muted-foreground">
-            You are conducting 9 therapeutic sessions today. 1 participant is checked in and waiting in the virtual studio lobby.
-          </p>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto mt-2 lg:mt-0">
-          <Button variant="outline" asChild className="w-full sm:w-auto justify-center">
-            <Link href="/yoga/exercise-library">
-              <Activity className="h-4 w-4 mr-2" />
-              Movement Library
-            </Link>
-          </Button>
-          <Button asChild className="w-full sm:w-auto justify-center">
-            <Link href="/yoga/yoga-routine-builder">
-              <Waves className="h-4 w-4 mr-2" />
-              Create Routine
-            </Link>
-          </Button>
+    <div className="space-y-6 font-['Manrope',sans-serif]">
+      {/* High-End Serene Yoga Hero Banner */}
+      <section className="relative overflow-hidden rounded-2xl border border-border/60 bg-card shadow-xl transition-all duration-300">
+        {/* Background Visual Yoga Studio Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-20 dark:opacity-30 transition-transform duration-1000 scale-105 hover:scale-100"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=1400&auto=format&fit=crop')`,
+          }}
+        />
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-transparent" />
+
+        <div className="relative z-10 p-6 md:p-8 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-center">
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/20 hover:bg-emerald-500/20 px-3 py-1 text-xs font-bold uppercase tracking-wider">
+                <Waves className="h-3.5 w-3.5 mr-1 animate-pulse" />
+                Therapeutic Yoga Studio
+              </Badge>
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-600 dark:text-teal-400 bg-teal-500/10 px-2.5 py-0.5 rounded-full border border-teal-500/20">
+                <span className="h-2 w-2 rounded-full bg-teal-500 animate-ping" />
+                Live Sessions Active
+              </span>
+            </div>
+
+            <div>
+              <h1 className="text-2xl md:text-3xl font-extrabold text-foreground tracking-tight">
+                Namaste, Acharya Arjun Dev
+              </h1>
+              <p className="max-w-xl text-xs md:text-sm text-muted-foreground leading-relaxed mt-1">
+                Therapeutic Yoga Workspace. You are conducting <strong className="text-foreground font-bold">9 sessions</strong> today across 1-on-1 & group classes.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap sm:flex-nowrap gap-3 shrink-0">
+            <Button variant="outline" asChild className="w-full sm:w-auto shadow-sm hover:shadow-md transition">
+              <Link href="/yoga/exercise-library">
+                <Activity className="h-4 w-4 mr-2 text-emerald-600" />
+                Asana Library
+              </Link>
+            </Button>
+            <Button asChild className="w-full sm:w-auto shadow-md hover:shadow-lg transition bg-emerald-600 hover:bg-emerald-700 text-white">
+              <Link href="/yoga/yoga-routine-builder">
+                <Waves className="h-4 w-4 mr-2" />
+                Create Routine
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
 
-      {/* Stats Cards */}
+      {/* Top Stat Cards with Background SVG Sparkline Graphs */}
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {statsData.map((item) => (
           <StatCard
@@ -102,58 +176,69 @@ const YogaDashboardPage = () => {
             title={item.title}
             value={item.value}
             change={item.change}
-            trend={item.trend as "up" | "neutral" | "down"}
+            trend={item.trend}
+            icon={item.icon}
+            graphVariant={item.graphVariant}
+            accentColor={item.accentColor}
           />
         ))}
       </section>
 
       {/* Main Content Grid */}
-      <section className="grid grid-cols-1 gap-4 xl:grid-cols-[1.3fr_0.7fr]">
-        {/* Sessions list */}
-        <Card className="surface-panel">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+      <section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.4fr_0.6fr]">
+        {/* Today's Practice Schedule */}
+        <Card className="surface-panel shadow-lg border-border/80">
+          <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-border/40">
             <div>
-              <CardTitle>Today's Practice Schedule</CardTitle>
-              <CardDescription>Therapeutic classes and check-in statuses</CardDescription>
+              <CardTitle className="text-lg font-bold flex items-center gap-2">
+                <Waves className="h-5 w-5 text-emerald-600" />
+                Today's Practice Schedule
+              </CardTitle>
+              <CardDescription className="text-xs">Therapeutic classes, asana routines, and participant check-ins</CardDescription>
             </div>
-            <Button size="sm" asChild variant="ghost">
-              <Link href="/yoga/calendar" className="text-primary text-xs flex items-center gap-1">
-                View Calendar
-                <ArrowUpRight className="h-3 w-3" />
+            <Button size="sm" asChild variant="ghost" className="hover:bg-emerald-500/10 hover:text-emerald-600">
+              <Link href="/yoga/calendar" className="text-emerald-600 text-xs font-semibold flex items-center gap-1">
+                View Studio Calendar
+                <ArrowUpRight className="h-3.5 w-3.5" />
               </Link>
             </Button>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-4">
             {/* Desktop Table View */}
             <div className="hidden md:block overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead>Time</TableHead>
-                    <TableHead>Participant</TableHead>
-                    <TableHead>Therapeutic Routine</TableHead>
-                    <TableHead>Class Type</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Action</TableHead>
+                  <TableRow className="bg-muted/40 hover:bg-muted/40">
+                    <TableHead className="font-bold">Time</TableHead>
+                    <TableHead className="font-bold">Participant</TableHead>
+                    <TableHead className="font-bold">Therapeutic Routine</TableHead>
+                    <TableHead className="font-bold">Class Type</TableHead>
+                    <TableHead className="font-bold">Status</TableHead>
+                    <TableHead className="text-right font-bold">Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {sessions.map((session) => (
-                    <TableRow key={session.id} className="hover:bg-muted/30">
-                      <TableCell className="font-medium text-sm text-foreground">{session.time}</TableCell>
+                    <TableRow key={session.id} className="hover:bg-muted/30 transition-colors">
+                      <TableCell className="font-bold text-xs text-foreground whitespace-nowrap">{session.time}</TableCell>
                       <TableCell>
-                        <div>
-                          <p className="font-semibold text-sm text-foreground">{session.participant}</p>
-                          <p className="text-xs text-muted-foreground">{session.age} yrs · ID: {session.id}</p>
+                        <div className="flex items-center gap-2.5">
+                          <div className="h-8 w-8 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-extrabold flex items-center justify-center text-xs shrink-0">
+                            {session.participant.split(" ").map(n => n[0]).join("")}
+                          </div>
+                          <div>
+                            <p className="font-bold text-xs text-foreground leading-tight">{session.participant}</p>
+                            <p className="text-[11px] text-muted-foreground">{session.age} yrs · #{session.id}</p>
+                          </div>
                         </div>
                       </TableCell>
-                      <TableCell className="text-sm text-muted-foreground font-medium">{session.routine}</TableCell>
-                      <TableCell className="text-xs text-muted-foreground">{session.type}</TableCell>
+                      <TableCell className="text-xs text-muted-foreground font-semibold">{session.routine}</TableCell>
+                      <TableCell className="text-xs text-muted-foreground font-medium">{session.type}</TableCell>
                       <TableCell>{getStatusBadge(session.status)}</TableCell>
                       <TableCell className="text-right">
-                        <Button size="sm" asChild variant={session.status === "Checked in" ? "default" : "secondary"}>
+                        <Button size="sm" asChild variant={session.status === "Checked in" ? "default" : "outline"} className={`h-8 text-xs font-semibold ${session.status === "Checked in" ? "bg-emerald-600 hover:bg-emerald-700 text-white" : ""}`}>
                           <Link href={`/yoga/attendance?id=${session.id}`}>
-                            {session.status === "Attended" || session.status === "Completed" ? "Feedback" : "Join"}
+                            {session.status === "Attended" || session.status === "Completed" ? "Feedback" : "Join Session"}
                           </Link>
                         </Button>
                       </TableCell>
@@ -166,20 +251,20 @@ const YogaDashboardPage = () => {
             {/* Mobile Stacked List View */}
             <div className="block md:hidden space-y-3">
               {sessions.map((session) => (
-                <div key={session.id} className="rounded-lg border border-border bg-background p-4 space-y-3">
+                <div key={session.id} className="rounded-xl border border-border/80 bg-background p-4 space-y-3 shadow-sm">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-primary">{session.time}</span>
+                    <span className="text-xs font-extrabold text-emerald-600">{session.time}</span>
                     {getStatusBadge(session.status)}
                   </div>
                   <div>
-                    <p className="font-semibold text-sm text-foreground">{session.participant}</p>
+                    <p className="font-bold text-sm text-foreground">{session.participant}</p>
                     <p className="text-xs text-muted-foreground">{session.age} yrs · {session.routine}</p>
-                    <p className="text-[11px] text-muted-foreground mt-1">Class type: {session.type}</p>
+                    <p className="text-[11px] text-muted-foreground mt-1">Format: {session.type}</p>
                   </div>
-                  <div className="flex justify-end pt-2 border-t border-border/40">
-                    <Button size="sm" asChild variant={session.status === "Checked in" ? "default" : "secondary"} className="w-full sm:w-auto">
+                  <div className="flex justify-end pt-2.5 border-t border-border/40">
+                    <Button size="sm" asChild variant={session.status === "Checked in" ? "default" : "outline"} className="w-full h-8 text-xs font-semibold">
                       <Link href={`/yoga/attendance?id=${session.id}`}>
-                        {session.status === "Attended" || session.status === "Completed" ? "Feedback" : "Join"}
+                        {session.status === "Attended" || session.status === "Completed" ? "Feedback" : "Join Session"}
                       </Link>
                     </Button>
                   </div>
@@ -189,69 +274,77 @@ const YogaDashboardPage = () => {
           </CardContent>
         </Card>
 
-        {/* Yoga Pose AI Co-Pilot */}
-        <Card className="surface-panel flex flex-col justify-between">
+        {/* Yoga Pose AI Co-Pilot & Posture Alignment */}
+        <Card className="surface-panel shadow-lg border-border/80 flex flex-col justify-between">
           <div>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Brain className="h-5 w-5 text-primary" />
-                Asana Co-Pilot
+            <CardHeader className="pb-3 border-b border-border/40">
+              <CardTitle className="text-lg font-bold flex items-center gap-2">
+                <Brain className="h-5 w-5 text-emerald-600 animate-pulse" />
+                Asana Pose AI Co-Pilot
               </CardTitle>
-              <CardDescription>AI flexibility and posture alignment tracking</CardDescription>
+              <CardDescription className="text-xs">AI flexibility & posture alignment tracking</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="rounded-lg border border-border bg-background p-4 space-y-2">
+            <CardContent className="pt-4 space-y-4">
+              <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3.5 space-y-1 relative overflow-hidden">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/20 px-2 py-0.5 rounded-full">Caution Alert</span>
-                  <span className="text-[10px] text-muted-foreground">Vikram Dravid</span>
+                  <span className="text-[11px] font-extrabold text-amber-700 dark:text-amber-300 bg-amber-500/15 px-2.5 py-0.5 rounded-full">Caution Alert</span>
+                  <span className="text-xs font-bold text-foreground">Vikram Dravid</span>
                 </div>
-                <p className="text-sm text-foreground font-medium">Cervical Spine Compressive Load</p>
-                <p className="text-xs text-muted-foreground">
-                  Camera pose analysis during the last Sarvangasana (Shoulderstand) detected a 15-degree anterior pelvic tilt tilt-angle deviation, overloading cervical vertebrae. Recommend using blankets/prop supports today.
+                <p className="text-xs font-bold text-foreground">Cervical Spine Tilt Angle</p>
+                <p className="text-[11px] text-muted-foreground leading-snug">
+                  Pose analysis in Sarvangasana detected tilt deviation. Recommend using prop supports today.
                 </p>
               </div>
 
-              <div className="rounded-lg border border-border bg-background p-4 space-y-2">
+              <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3.5 space-y-1 relative overflow-hidden">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/20 px-2 py-0.5 rounded-full">Mobility Gain</span>
-                  <span className="text-[10px] text-muted-foreground">Niharika Sen</span>
+                  <span className="text-[11px] font-extrabold text-emerald-700 dark:text-emerald-300 bg-emerald-500/15 px-2.5 py-0.5 rounded-full">Mobility Gain</span>
+                  <span className="text-xs font-bold text-foreground">Niharika Sen</span>
                 </div>
-                <p className="text-sm text-foreground font-medium">Hamstring Range of Motion</p>
-                <p className="text-xs text-muted-foreground">
-                  Hamstring active extension increased by +12 degrees in Paschimottanasana over 21 days. Hip joint flexibility shows stable progression. Continue mobility series.
+                <p className="text-xs font-bold text-foreground">Hamstring ROM Extension (+12°)</p>
+                <p className="text-[11px] text-muted-foreground leading-snug">
+                  Active extension increased by +12 degrees over 21 days. Hip joint flexibility shows stable progression.
                 </p>
               </div>
             </CardContent>
           </div>
-          <CardContent className="pt-0">
-            <Button variant="outline" className="w-full text-xs text-muted-foreground flex items-center justify-center gap-1" asChild>
+          <CardContent className="pt-2">
+            <Button variant="outline" className="w-full text-xs font-bold flex items-center justify-center gap-1.5 border-border hover:bg-emerald-500/10 hover:text-emerald-600 transition" asChild>
               <Link href="/yoga/progress">
                 <ClipboardCheck className="h-4 w-4" />
-                View Longitudinal Mobility Trends
+                View Mobility & Kinematics Trends
               </Link>
             </Button>
           </CardContent>
         </Card>
       </section>
 
-      {/* Recharts Analytics Widget */}
-      <section className="grid grid-cols-1 gap-4">
-        <Card className="surface-panel">
-          <CardHeader>
-            <CardTitle>Session Volume & Attendance Trend</CardTitle>
-            <CardDescription>Classes conducted vs average attendance rate per day</CardDescription>
+      {/* Practice Volume Recharts Analytics Widget */}
+      <section className="grid grid-cols-1 gap-6">
+        <Card className="surface-panel shadow-lg border-border/80">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-border/40">
+            <div>
+              <CardTitle className="text-lg font-bold flex items-center gap-2">
+                <Activity className="h-5 w-5 text-emerald-600" />
+                Session Volume & Attendance Trend
+              </CardTitle>
+              <CardDescription className="text-xs">Classes conducted vs average participant attendance rate</CardDescription>
+            </div>
+            <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 text-xs font-semibold">
+              Live Studio Telemetry
+            </Badge>
           </CardHeader>
-          <CardContent className="min-w-0 overflow-hidden">
+          <CardContent className="pt-6 min-w-0 overflow-hidden">
             <ChartContainer config={chartConfig} className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={weeklyPracticeData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="day" tickLine={false} axisLine={false} />
-                  <YAxis tickLine={false} axisLine={false} />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
+                  <XAxis dataKey="day" tickLine={false} axisLine={false} className="text-xs font-semibold" />
+                  <YAxis tickLine={false} axisLine={false} className="text-xs font-semibold" />
                   <ChartTooltip content={<ChartTooltipContent />} />
                   <Legend />
-                  <Bar dataKey="sessions" fill="var(--color-sessions)" radius={[4, 4, 0, 0]} name="Sessions Conducted" />
-                  <Bar dataKey="attendance" fill="var(--color-attendance)" radius={[4, 4, 0, 0]} name="Attendance Rate (%)" />
+                  <Bar dataKey="sessions" fill="var(--color-sessions)" radius={[6, 6, 0, 0]} name="Sessions Conducted" />
+                  <Bar dataKey="attendance" fill="var(--color-attendance)" radius={[6, 6, 0, 0]} name="Attendance Rate (%)" />
                 </BarChart>
               </ResponsiveContainer>
             </ChartContainer>

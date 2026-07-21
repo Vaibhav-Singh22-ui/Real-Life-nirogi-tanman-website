@@ -1,4 +1,23 @@
-import { Brain, Calendar, ClipboardCheck, Clock, Plus, Stethoscope, Video, Users, ArrowUpRight } from "lucide-react";
+import {
+  Brain,
+  Calendar,
+  ClipboardCheck,
+  Clock,
+  Plus,
+  Stethoscope,
+  Video,
+  Users,
+  ArrowUpRight,
+  BadgeDollarSign,
+  FileText,
+  Sparkles,
+  Activity,
+  ShieldAlert,
+  Pill,
+  CheckCircle2,
+  UserCheck,
+  ChevronRight,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import StatCard from "@/components/app/StatCard";
@@ -22,10 +41,42 @@ import {
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Legend } from "recharts";
 
 const statsData = [
-  { title: "Patients Today", value: "18", change: "+3 vs yesterday", trend: "up" },
-  { title: "Avg Consultation Time", value: "22 min", change: "Optimal limit (30m)", trend: "neutral" },
-  { title: "Pending Clinical Notes", value: "5", change: "-2 from morning", trend: "up" },
-  { title: "Today's Est. Revenue", value: "₹32,400", change: "+14% vs weekly avg", trend: "up" },
+  {
+    title: "Patients Today",
+    value: "18",
+    change: "+3 vs yesterday",
+    trend: "up" as const,
+    icon: Users,
+    graphVariant: "ecg" as const,
+    accentColor: "emerald" as const,
+  },
+  {
+    title: "Avg Consultation Time",
+    value: "22 min",
+    change: "Optimal limit (30m)",
+    trend: "neutral" as const,
+    icon: Clock,
+    graphVariant: "wave" as const,
+    accentColor: "indigo" as const,
+  },
+  {
+    title: "Pending Clinical Notes",
+    value: "5",
+    change: "-2 from morning",
+    trend: "up" as const,
+    icon: FileText,
+    graphVariant: "bars" as const,
+    accentColor: "amber" as const,
+  },
+  {
+    title: "Today's Est. Revenue",
+    value: "₹32,400",
+    change: "+14% vs weekly avg",
+    trend: "up" as const,
+    icon: BadgeDollarSign,
+    graphVariant: "area" as const,
+    accentColor: "teal" as const,
+  },
 ];
 
 const consultationSchedule = [
@@ -69,33 +120,60 @@ const DoctorDashboardPage = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Welcome banner */}
-      <section className="grid grid-cols-1 gap-4 rounded-lg border border-border bg-hero-gradient p-6 lg:grid-cols-[1fr_auto] lg:items-center">
-        <div>
-          <p className="uppercase-label text-primary">Doctor Workspace</p>
-          <h1 className="mt-2 text-3xl font-semibold text-foreground">Good Morning, Dr. Kavya Menon</h1>
-          <p className="mt-2 max-w-2xl text-muted-foreground">
-            You have 18 consultations scheduled for today. 2 patients are currently waiting in the virtual queue.
-          </p>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto mt-2 lg:mt-0">
-          <Button variant="outline" asChild className="w-full sm:w-auto justify-center">
-            <Link href="/doctor/availability">
-              <Clock className="h-4 w-4 mr-2" />
-              Availability
-            </Link>
-          </Button>
-          <Button asChild className="w-full sm:w-auto justify-center">
-            <Link href="/doctor/patient-queue">
-              <Users className="h-4 w-4 mr-2" />
-              View Patient Queue
-            </Link>
-          </Button>
+    <div className="space-y-6 font-['Manrope',sans-serif]">
+      {/* High-End Visual Doctor Hero Banner */}
+      <section className="relative overflow-hidden rounded-2xl border border-border/60 bg-card shadow-xl transition-all duration-300">
+        {/* Background Visual Medical Banner Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-20 dark:opacity-30 transition-transform duration-1000 scale-105 hover:scale-100"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1400&auto=format&fit=crop')`,
+          }}
+        />
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-transparent" />
+
+        <div className="relative z-10 p-6 md:p-8 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-center">
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge className="bg-primary/15 text-primary border-primary/20 hover:bg-primary/20 px-3 py-1 text-xs font-bold uppercase tracking-wider">
+                <Stethoscope className="h-3.5 w-3.5 mr-1 animate-pulse" />
+                Integrative Clinical Desk
+              </Badge>
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+                Live Consultations Active
+              </span>
+            </div>
+
+            <div>
+              <h1 className="text-2xl md:text-3xl font-extrabold text-foreground tracking-tight">
+                Good Morning, Dr. Kavya Menon, MD
+              </h1>
+              <p className="max-w-xl text-xs md:text-sm text-muted-foreground leading-relaxed mt-1">
+                Integrative Medicine & Metabolic Care Workspace. You have <strong className="text-foreground font-bold">18 consultations</strong> scheduled today across clinical & telehealth sessions.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap sm:flex-nowrap gap-3 shrink-0">
+            <Button variant="outline" asChild className="w-full sm:w-auto shadow-sm hover:shadow-md transition">
+              <Link href="/doctor/availability">
+                <Clock className="h-4 w-4 mr-2 text-primary" />
+                Manage Slots
+              </Link>
+            </Button>
+            <Button asChild className="w-full sm:w-auto shadow-md hover:shadow-lg transition">
+              <Link href="/doctor/patient-queue">
+                <Users className="h-4 w-4 mr-2" />
+                View Patient Queue
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
 
-      {/* Stats Cards */}
+      {/* Top Stat Cards with Background SVG Sparkline Graphs */}
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {statsData.map((item) => (
           <StatCard
@@ -103,67 +181,78 @@ const DoctorDashboardPage = () => {
             title={item.title}
             value={item.value}
             change={item.change}
-            trend={item.trend as "up" | "neutral" | "down"}
+            trend={item.trend}
+            icon={item.icon}
+            graphVariant={item.graphVariant}
+            accentColor={item.accentColor}
           />
         ))}
       </section>
 
       {/* Main Content Grid */}
-      <section className="grid grid-cols-1 gap-4 xl:grid-cols-[1.3fr_0.7fr]">
-        {/* Schedule */}
-        <Card className="surface-panel">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+      <section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.4fr_0.6fr]">
+        {/* Real-time Consultations & Patient Queue */}
+        <Card className="surface-panel shadow-lg border-border/80">
+          <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-border/40">
             <div>
-              <CardTitle>Today's Consultations</CardTitle>
-              <CardDescription>Real-time queue and scheduled sessions</CardDescription>
+              <CardTitle className="text-lg font-bold flex items-center gap-2">
+                <ClipboardCheck className="h-5 w-5 text-primary" />
+                Today's Consultations Pipeline
+              </CardTitle>
+              <CardDescription className="text-xs">Real-time triage queue and active patient sessions</CardDescription>
             </div>
-            <Button size="sm" asChild variant="ghost">
-              <Link href="/doctor/appointments" className="text-primary text-xs flex items-center gap-1">
+            <Button size="sm" asChild variant="ghost" className="hover:bg-primary/10 hover:text-primary">
+              <Link href="/doctor/appointments" className="text-primary text-xs font-semibold flex items-center gap-1">
                 View All Appointments
-                <ArrowUpRight className="h-3 w-3" />
+                <ArrowUpRight className="h-3.5 w-3.5" />
               </Link>
             </Button>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-4">
             {/* Desktop Table View */}
             <div className="hidden md:block overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead>Time</TableHead>
-                    <TableHead>Patient</TableHead>
-                    <TableHead>Consultation Type</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Mode</TableHead>
-                    <TableHead className="text-right">Action</TableHead>
+                  <TableRow className="bg-muted/40 hover:bg-muted/40">
+                    <TableHead className="font-bold">Time</TableHead>
+                    <TableHead className="font-bold">Patient Details</TableHead>
+                    <TableHead className="font-bold">Clinical Focus</TableHead>
+                    <TableHead className="font-bold">Status</TableHead>
+                    <TableHead className="font-bold">Mode</TableHead>
+                    <TableHead className="text-right font-bold">Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {schedule.map((session) => (
-                    <TableRow key={session.id} className="hover:bg-muted/30">
-                      <TableCell className="font-medium text-sm text-foreground">{session.time}</TableCell>
+                    <TableRow key={session.id} className="hover:bg-muted/30 transition-colors">
+                      <TableCell className="font-bold text-xs text-foreground whitespace-nowrap">{session.time}</TableCell>
                       <TableCell>
-                        <div>
-                          <p className="font-semibold text-sm text-foreground">{session.patientName}</p>
-                          <p className="text-xs text-muted-foreground">{session.age} yrs · {session.gender}</p>
+                        <div className="flex items-center gap-2.5">
+                          <div className="h-8 w-8 rounded-full bg-primary/10 text-primary font-extrabold flex items-center justify-center text-xs shrink-0">
+                            {session.patientName.split(" ").map(n => n[0]).join("")}
+                          </div>
+                          <div>
+                            <p className="font-bold text-xs text-foreground leading-tight">{session.patientName}</p>
+                            <p className="text-[11px] text-muted-foreground">{session.age} yrs · {session.gender} · #{session.id}</p>
+                          </div>
                         </div>
                       </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">{session.type}</TableCell>
+                      <TableCell className="text-xs text-muted-foreground font-medium">{session.type}</TableCell>
                       <TableCell>{getStatusBadge(session.status)}</TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                           {session.mode === "Video Call" ? (
                             <Video className="h-3.5 w-3.5 text-primary" />
                           ) : (
-                            <Stethoscope className="h-3.5 w-3.5 text-secondary" />
+                            <Stethoscope className="h-3.5 w-3.5 text-emerald-600" />
                           )}
-                          {session.mode}
+                          <span className="font-medium">{session.mode}</span>
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button size="sm" asChild variant={session.status === "In Consultation" || session.status === "Waiting" ? "default" : "secondary"}>
+                        <Button size="sm" asChild variant={session.status === "In Consultation" || session.status === "Waiting" ? "default" : "outline"} className="h-8 text-xs font-semibold">
                           <Link href={`/doctor/consultation?id=${session.id}`}>
-                            {session.status === "Completed" ? "View Notes" : "Start"}
+                            {session.status === "Completed" ? "View Notes" : "Start Consultation"}
                           </Link>
                         </Button>
                       </TableCell>
@@ -176,25 +265,25 @@ const DoctorDashboardPage = () => {
             {/* Mobile Stacked List View */}
             <div className="block md:hidden space-y-3">
               {schedule.map((session) => (
-                <div key={session.id} className="rounded-lg border border-border bg-background p-4 space-y-3">
+                <div key={session.id} className="rounded-xl border border-border/80 bg-background p-4 space-y-3 shadow-sm">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-primary">{session.time}</span>
+                    <span className="text-xs font-extrabold text-primary">{session.time}</span>
                     {getStatusBadge(session.status)}
                   </div>
                   <div>
-                    <p className="font-semibold text-sm text-foreground">{session.patientName}</p>
+                    <p className="font-bold text-sm text-foreground">{session.patientName}</p>
                     <p className="text-xs text-muted-foreground">{session.age} yrs · {session.gender} · {session.type}</p>
                   </div>
-                  <div className="flex items-center justify-between pt-2 border-t border-border/40">
+                  <div className="flex items-center justify-between pt-2.5 border-t border-border/40">
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
                       {session.mode === "Video Call" ? (
                         <Video className="h-3.5 w-3.5 text-primary" />
                       ) : (
-                        <Stethoscope className="h-3.5 w-3.5 text-secondary" />
+                        <Stethoscope className="h-3.5 w-3.5 text-emerald-600" />
                       )}
-                      {session.mode}
+                      <span>{session.mode}</span>
                     </div>
-                    <Button size="sm" asChild variant={session.status === "In Consultation" || session.status === "Waiting" ? "default" : "secondary"}>
+                    <Button size="sm" asChild variant={session.status === "In Consultation" || session.status === "Waiting" ? "default" : "outline"} className="h-8 text-xs font-semibold">
                       <Link href={`/doctor/consultation?id=${session.id}`}>
                         {session.status === "Completed" ? "View Notes" : "Start"}
                       </Link>
@@ -206,69 +295,77 @@ const DoctorDashboardPage = () => {
           </CardContent>
         </Card>
 
-        {/* Co-Pilot Clinical AI Insights */}
-        <Card className="surface-panel flex flex-col justify-between">
+        {/* Clinical Co-Pilot AI & Wearable Vitals Telemetry */}
+        <Card className="surface-panel shadow-lg border-border/80 flex flex-col justify-between">
           <div>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Brain className="h-5 w-5 text-primary" />
-                Clinical Co-Pilot
+            <CardHeader className="pb-3 border-b border-border/40">
+              <CardTitle className="text-lg font-bold flex items-center gap-2">
+                <Brain className="h-5 w-5 text-primary animate-pulse" />
+                Clinical Co-Pilot AI
               </CardTitle>
-              <CardDescription>AI insights based on patient logs and wearables</CardDescription>
+              <CardDescription className="text-xs">Wearables telemetry & adaptive care alerts</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="rounded-lg border border-border bg-background p-4 space-y-2">
+            <CardContent className="pt-4 space-y-4">
+              <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3.5 space-y-1 relative overflow-hidden">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/20 px-2 py-0.5 rounded-full">High Priority Alert</span>
-                  <span className="text-[10px] text-muted-foreground">Aisha Mehta</span>
+                  <span className="text-[11px] font-extrabold text-amber-700 dark:text-amber-300 bg-amber-500/15 px-2.5 py-0.5 rounded-full">Priority Alert</span>
+                  <span className="text-xs font-bold text-foreground">Aisha Mehta</span>
                 </div>
-                <p className="text-sm text-foreground font-medium">Elevated Inflammation Tracing</p>
-                <p className="text-xs text-muted-foreground">
-                  Wearable logs show resting HR spiked by +8bpm over 3 consecutive nights. Fasting blood sugar logs show high variability. Recommend checking salivary cortisol markers today.
+                <p className="text-xs font-bold text-foreground">Elevated Resting HR (+8 bpm)</p>
+                <p className="text-[11px] text-muted-foreground leading-snug">
+                  Wearable telemetry logged elevated resting HR over 3 nights. Recommend checking salivary cortisol markers today.
                 </p>
               </div>
 
-              <div className="rounded-lg border border-border bg-background p-4 space-y-2">
+              <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3.5 space-y-1 relative overflow-hidden">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/20 px-2 py-0.5 rounded-full">Recovery Milestone</span>
-                  <span className="text-[10px] text-muted-foreground">Siddharth Malhotra</span>
+                  <span className="text-[11px] font-extrabold text-emerald-700 dark:text-emerald-300 bg-emerald-500/15 px-2.5 py-0.5 rounded-full">Milestone</span>
+                  <span className="text-xs font-bold text-foreground">Siddharth Malhotra</span>
                 </div>
-                <p className="text-sm text-foreground font-medium">Chronic Fatigue Improvement</p>
-                <p className="text-xs text-muted-foreground">
-                  Patient reports 30% reduction in morning fatigue score after following the custom adaptogen & sleep routine. Sleep latency dropped to under 15 minutes.
+                <p className="text-xs font-bold text-foreground">Fatigue Score Reduction (-30%)</p>
+                <p className="text-[11px] text-muted-foreground leading-snug">
+                  Patient reports 30% reduction in fatigue score following custom adaptogen & sleep protocol.
                 </p>
               </div>
             </CardContent>
           </div>
-          <CardContent className="pt-0">
-            <Button variant="outline" className="w-full text-xs text-muted-foreground flex items-center justify-center gap-1" asChild>
+          <CardContent className="pt-2">
+            <Button variant="outline" className="w-full text-xs font-bold flex items-center justify-center gap-1.5 border-border hover:bg-primary/10 hover:text-primary transition" asChild>
               <Link href="/doctor/reports">
                 <ClipboardCheck className="h-4 w-4" />
-                Verify All Clinical Bulletins
+                Review Diagnostic Findings
               </Link>
             </Button>
           </CardContent>
         </Card>
       </section>
 
-      {/* Recharts Analytics Widget */}
-      <section className="grid grid-cols-1 gap-4">
-        <Card className="surface-panel">
-          <CardHeader>
-            <CardTitle>Clinic Performance Trends</CardTitle>
-            <CardDescription>Consultation hours & patient load comparison</CardDescription>
+      {/* Clinic Performance Analytics Recharts Widget */}
+      <section className="grid grid-cols-1 gap-6">
+        <Card className="surface-panel shadow-lg border-border/80">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-border/40">
+            <div>
+              <CardTitle className="text-lg font-bold flex items-center gap-2">
+                <Activity className="h-5 w-5 text-primary" />
+                Clinic Activity & Consultation Analytics
+              </CardTitle>
+              <CardDescription className="text-xs">Weekly patient volume vs total active clinical hours</CardDescription>
+            </div>
+            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-xs font-semibold">
+              Live Workload Telemetry
+            </Badge>
           </CardHeader>
-          <CardContent className="min-w-0 overflow-hidden">
+          <CardContent className="pt-6 min-w-0 overflow-hidden">
             <ChartContainer config={chartConfig} className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={weeklyActivity} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="day" tickLine={false} axisLine={false} />
-                  <YAxis tickLine={false} axisLine={false} />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
+                  <XAxis dataKey="day" tickLine={false} axisLine={false} className="text-xs font-semibold" />
+                  <YAxis tickLine={false} axisLine={false} className="text-xs font-semibold" />
                   <ChartTooltip content={<ChartTooltipContent />} />
                   <Legend />
-                  <Bar dataKey="patients" fill="var(--color-patients)" radius={[4, 4, 0, 0]} name="Patients Consulted" />
-                  <Bar dataKey="hours" fill="var(--color-hours)" radius={[4, 4, 0, 0]} name="Active Hours" />
+                  <Bar dataKey="patients" fill="var(--color-patients)" radius={[6, 6, 0, 0]} name="Patients Consulted" />
+                  <Bar dataKey="hours" fill="var(--color-hours)" radius={[6, 6, 0, 0]} name="Active Hours" />
                 </BarChart>
               </ResponsiveContainer>
             </ChartContainer>

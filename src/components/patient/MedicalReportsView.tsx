@@ -77,17 +77,21 @@ export default function MedicalReportsView() {
   return (
     <div className="space-y-6 font-['Manrope',sans-serif]">
       {/* Header */}
-      <section className="grid gap-4 rounded-lg border border-border bg-hero-gradient p-6 lg:grid-cols-[1fr_auto] lg:items-center">
-        <div>
+      <section className="relative overflow-hidden rounded-2xl border border-border/80 bg-card p-6 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center shadow-sm">
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-10 dark:opacity-20 pointer-events-none"
+          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1200&auto=format&fit=crop')` }}
+        />
+        <div className="relative z-10">
           <p className="uppercase-label text-primary font-bold">Patient Workspace</p>
-          <h1 className="mt-2 text-3xl font-semibold text-foreground">Medical Records Vault</h1>
-          <p className="mt-2 max-w-3xl text-muted-foreground">
-            Secure locker for your diagnostic reports, physician consultations, and clinical files. Encrypted and accessible by your care team.
+          <h1 className="mt-1 text-2xl font-bold text-foreground">Medical Records Vault</h1>
+          <p className="mt-1 max-w-2xl text-xs text-muted-foreground">
+            Secure locker for your diagnostic reports, physician consultations, and clinical files.
           </p>
         </div>
-        <div className="rounded-md border border-border bg-background/80 px-4 py-3 text-center">
-          <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground leading-none">Total Documents</p>
-          <p className="mt-1 text-base font-extrabold text-foreground">{docs.length} files</p>
+        <div className="relative z-10 rounded-xl border border-border/60 bg-background/90 px-4 py-3 text-center backdrop-blur-sm">
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold leading-none">Total Documents</p>
+          <p className="mt-1 text-sm font-extrabold text-foreground">{docs.length} Vault Files</p>
         </div>
       </section>
 

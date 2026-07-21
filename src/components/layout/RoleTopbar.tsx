@@ -50,8 +50,10 @@ const RoleTopbar = ({ role }: { role: AppRole }) => {
           </div>
         )}
 
-        <Button variant="ghost" size="icon" aria-label="Notifications" className="h-9 w-9">
-          <Bell className="h-4 w-4 text-muted-foreground" />
+        <Button variant="ghost" size="icon" aria-label="Notifications" className="h-9 w-9" asChild>
+          <Link href={`/${role}/notifications`}>
+            <Bell className="h-4 w-4 text-muted-foreground" />
+          </Link>
         </Button>
 
         <DropdownMenu>
@@ -62,7 +64,7 @@ const RoleTopbar = ({ role }: { role: AppRole }) => {
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuContent align="end" className="w-48 animate-in fade-in-80 slide-in-from-top-1 duration-200">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>

@@ -15,5 +15,7 @@ To maintain continuous build integrity and premium quality, adhere to the follow
 - **Close tags correctly**: When porting elements (like `Sheet`, `Dialog`, or custom wrapper blocks) from one component to another, ensure they are closed with their exact tag name (e.g. `</Sheet>`) and not generic elements or empty fragments (`</>`).
 - **Nesting validation**: Ensure all children tags correspond properly to their parent elements.
 
-## 3. Path Resolution
-- **Absolute Paths**: Always check and use absolute paths for artifact files (e.g., `C:\Users\Vaibhav Singh\.gemini\antigravity-ide\brain\...`) instead of guessing relative links that can lead to file-not-found failures.
+## 4. Fixed Sidebar Positioning & Independent Content Scrolling
+- **Sidebar Position**: Ensure the dashboard sidebar container is locked to the viewport height (`fixed inset-y-0 z-10 h-svh` or `sticky top-0 h-screen`) so that it remains static on screen while page content scrolls independently.
+- **Internal Scrolling**: Enable `overflow-y-auto` only inside `<SidebarContent>`, preserving independent scrolling for menu items without moving the overall sidebar position.
+

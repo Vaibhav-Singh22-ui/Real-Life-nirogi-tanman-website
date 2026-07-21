@@ -157,15 +157,19 @@ export default function VitalsTrackerView() {
   return (
     <div className="space-y-6 font-['Manrope',sans-serif]">
       {/* Header */}
-      <section className="grid gap-4 rounded-lg border border-border bg-hero-gradient p-6 lg:grid-cols-[1fr_auto] lg:items-center">
-        <div>
+      <section className="relative overflow-hidden rounded-2xl border border-border/80 bg-card p-6 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center shadow-sm">
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-10 dark:opacity-20 pointer-events-none"
+          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1200&auto=format&fit=crop')` }}
+        />
+        <div className="relative z-10">
           <p className="uppercase-label text-primary font-bold">Patient Workspace</p>
-          <h1 className="mt-2 text-3xl font-semibold text-foreground">Vitals Tracker</h1>
-          <p className="mt-2 max-w-3xl text-muted-foreground">
+          <h1 className="mt-1 text-2xl font-bold text-foreground">Vitals Tracker</h1>
+          <p className="mt-1 max-w-2xl text-xs text-muted-foreground">
             Monitor and record cardiovascular metrics and glucose trends to coordinate medical care workflows.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 relative z-10">
           <Button variant={activeTab === "bp" ? "default" : "outline"} onClick={() => setActiveTab("bp")} className="text-xs">
             Blood Pressure
           </Button>

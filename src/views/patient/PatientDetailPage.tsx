@@ -115,7 +115,11 @@ const PatientDetailPage = ({ pageKey }: PatientDetailPageProps) => {
     return (
       <div className="space-y-6 max-w-6xl mx-auto">
         {/* Profile Header Banner */}
-        <section className="relative overflow-hidden rounded-xl border border-border bg-hero-gradient p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <section className="relative overflow-hidden rounded-2xl border border-border/80 bg-card p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm">
+          <div 
+            className="absolute inset-0 bg-cover bg-center opacity-10 dark:opacity-20 pointer-events-none"
+            style={{ backgroundImage: `url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=1200&auto=format&fit=crop')` }}
+          />
           <div className="flex items-center gap-5 z-10">
             <div className="relative group">
               <div className="h-20 w-20 md:h-24 md:w-24 overflow-hidden rounded-full border-4 border-background bg-primary/10 flex items-center justify-center text-primary font-semibold text-2xl md:text-3xl shadow-md">
@@ -475,15 +479,19 @@ const PatientDetailPage = ({ pageKey }: PatientDetailPageProps) => {
   if (pageKey === "health-reports") {
     return (
       <div className="space-y-6 font-['Manrope',sans-serif]">
-        <section className="grid gap-4 rounded-lg border border-border bg-hero-gradient p-6 lg:grid-cols-[1fr_auto] lg:items-center">
-          <div>
+        <section className="relative overflow-hidden rounded-2xl border border-border/80 bg-card p-6 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center shadow-sm">
+          <div 
+            className="absolute inset-0 bg-cover bg-center opacity-10 dark:opacity-20 pointer-events-none"
+            style={{ backgroundImage: `url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=1200&auto=format&fit=crop')` }}
+          />
+          <div className="relative z-10">
             <p className="uppercase-label text-primary font-bold">Patient Workspace</p>
-            <h1 className="mt-2 text-3xl font-semibold text-foreground">{page.title}</h1>
-            <p className="mt-2 max-w-3xl text-muted-foreground">{page.description}</p>
+            <h1 className="mt-1 text-2xl font-bold text-foreground">{page.title}</h1>
+            <p className="mt-1 max-w-2xl text-xs text-muted-foreground">{page.description}</p>
           </div>
-          <div className="rounded-md border border-border bg-background/80 px-4 py-3">
-            <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{page.focusLabel}</p>
-            <p className="mt-1 text-sm font-medium text-foreground">{page.focusValue}</p>
+          <div className="relative z-10 rounded-xl border border-border/60 bg-background/90 p-3.5 backdrop-blur-sm">
+            <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">{page.focusLabel}</p>
+            <p className="mt-0.5 text-xs font-bold text-foreground">{page.focusValue}</p>
           </div>
         </section>
 
@@ -606,15 +614,19 @@ const PatientDetailPage = ({ pageKey }: PatientDetailPageProps) => {
   // Fallback to standard detailing view for other pageKeys
   return (
     <div className="space-y-6">
-      <section className="grid gap-4 rounded-lg border border-border bg-hero-gradient p-6 lg:grid-cols-[1fr_auto] lg:items-center">
-        <div>
+      <section className="relative overflow-hidden rounded-2xl border border-border/80 bg-card p-6 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center shadow-sm">
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-10 dark:opacity-20 pointer-events-none"
+          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=1200&auto=format&fit=crop')` }}
+        />
+        <div className="relative z-10">
           <p className="uppercase-label text-primary">Patient Workspace</p>
-          <h1 className="mt-2 text-3xl font-semibold text-foreground">{page.title}</h1>
-          <p className="mt-2 max-w-3xl text-muted-foreground">{page.description}</p>
+          <h1 className="mt-1 text-2xl font-bold text-foreground">{page.title}</h1>
+          <p className="mt-1 max-w-2xl text-xs text-muted-foreground">{page.description}</p>
         </div>
-        <div className="rounded-md border border-border bg-background/80 px-4 py-3">
-          <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{page.focusLabel}</p>
-          <p className="mt-1 text-sm font-medium text-foreground">{page.focusValue}</p>
+        <div className="relative z-10 rounded-xl border border-border/60 bg-background/90 p-3.5 backdrop-blur-sm">
+          <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">{page.focusLabel}</p>
+          <p className="mt-0.5 text-xs font-bold text-foreground">{page.focusValue}</p>
         </div>
       </section>
 
