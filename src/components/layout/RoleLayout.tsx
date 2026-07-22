@@ -11,11 +11,11 @@ type RoleLayoutProps = {
 const RoleLayout = ({ role, children }: RoleLayoutProps) => {
   return (
     <SidebarProvider defaultOpen>
-      <div className="flex min-h-screen w-full bg-background overflow-x-hidden">
+      <div className="flex h-screen w-full bg-background overflow-hidden">
         <RoleSidebar role={role} />
-        <SidebarInset className="min-w-0 overflow-hidden">
+        <SidebarInset className="min-w-0 flex-1 h-screen overflow-y-auto flex flex-col">
           <RoleTopbar role={role} />
-          <div className="flex-1 w-full max-w-full px-4 py-5 md:px-6 overflow-x-hidden">
+          <div className="flex-1 w-full max-w-full px-4 py-5 md:px-6">
             {children}
           </div>
         </SidebarInset>

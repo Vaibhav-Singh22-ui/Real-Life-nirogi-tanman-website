@@ -34,10 +34,13 @@ type PatientDetailPageProps = {
   pageKey: PatientPageKey;
 };
 
+import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/lib/supabase";
+
 const defaultProfile = {
-  fullName: "Vaibhav Singh",
-  email: "vaibhav@nirogi.app",
-  phone: "+91 98765 43210",
+  fullName: "Amit Verma",
+  email: "patient@nirogi.app",
+  phone: "",
   dob: "1995-10-15",
   gender: "Male",
   address: "Sector 15, HSR Layout, Bengaluru, India",
@@ -47,14 +50,15 @@ const defaultProfile = {
   primaryGoal: "Stress Relief & Cardio",
   allergies: "Peanuts, Dust pollen",
   conditions: "Mild lower-back stiffness, seasonal asthma",
-  emergencyName: "Priya Singh",
-  emergencyPhone: "+91 98765 09876",
+  emergencyName: "Priya Verma",
+  emergencyPhone: "",
   emergencyRelation: "Spouse",
   preferredLanguage: "English & Hindi",
 };
 
 const PatientDetailPage = ({ pageKey }: PatientDetailPageProps) => {
   const page = patientPages[pageKey];
+  const { user, profile: authProfile, refreshProfile } = useAuth();
 
   // Profile-specific state
   const [profile, setProfile] = useState(defaultProfile);
@@ -77,27 +81,90 @@ const PatientDetailPage = ({ pageKey }: PatientDetailPageProps) => {
     }, 1500);
   };
 
-  // Load from LocalStorage
+  // Load from Supabase Database & LocalStorage fallback
   useEffect(() => {
     if (pageKey === "profile") {
-      const saved = localStorage.getItem("nirogi_patient_profile");
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          setProfile(parsed);
-          setFormData(parsed);
-        } catch (e) {
-          console.error("Error parsing local profile data:", e);
-        }
-      }
-    }
-  }, [pageKey]);
+      const loadPatientProfileData = async () => {
+        if (user?.id) {
+          try {
+            const { data: mainProf } = await supabase
+              .from("profiles")
+              .select("*")
+              .eq("id", user.id)
+              .single();
 
-  const handleSave = () => {
+            const { data: patientProf } = await supabase
+              .from("patient_profiles")
+              .select("*")
+              .eq("id", user.id)
+              .single();
+
+            const merged = {
+              ...defaultProfile,
+              fullName: mainProf?.full_name || user.user_metadata?.full_name || user.email?.split("@")[0] || defaultProfile.fullName,
+              email: user.email || defaultProfile.email,
+              phone: mainProf?.phone || user.phone || user.user_metadata?.phone || "",
+              bloodGroup: patientProf?.blood_group || defaultProfile.bloodGroup,
+              conditions: patientProf?.medical_history || defaultProfile.conditions,
+              allergies: Array.isArray(patientProf?.allergies) ? patientProf.allergies.join(", ") : defaultProfile.allergies,
+              emergencyPhone: patientProf?.emergency_contact || "",
+            };
+
+            setProfile(merged);
+            setFormData(merged);
+            return;
+          } catch (e) {
+            console.error("Error fetching Supabase profile:", e);
+          }
+        }
+
+        const saved = localStorage.getItem("nirogi_patient_profile");
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            setProfile(parsed);
+            setFormData(parsed);
+          } catch (e) {
+            console.error("Error parsing local profile data:", e);
+          }
+        }
+      };
+
+      loadPatientProfileData();
+    }
+  }, [pageKey, user]);
+
+  const handleSave = async () => {
     setProfile(formData);
     localStorage.setItem("nirogi_patient_profile", JSON.stringify(formData));
+
+    if (user?.id) {
+      try {
+        await supabase
+          .from("profiles")
+          .update({
+            full_name: formData.fullName,
+            phone: formData.phone,
+          })
+          .eq("id", user.id);
+
+        await supabase
+          .from("patient_profiles")
+          .upsert({
+            id: user.id,
+            blood_group: formData.bloodGroup,
+            medical_history: formData.conditions,
+            emergency_contact: formData.emergencyPhone,
+          });
+
+        await refreshProfile();
+      } catch (err) {
+        console.error("Error updating patient profile:", err);
+      }
+    }
+
     setIsEditing(false);
-    toast.success("Profile saved successfully!");
+    toast.success("Profile saved and synced to database!");
   };
 
   const handleCancel = () => {

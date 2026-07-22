@@ -7,7 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { FileText, Plus, ShieldCheck, Download, Eye, Tag, Calendar } from "lucide-react";
+import { FileText, Plus, ShieldCheck, Download, Eye, Tag, Calendar, Loader2 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/lib/supabase";
 
 interface DocumentRecord {
   id: string;
@@ -25,58 +27,108 @@ const defaultDocs: DocumentRecord[] = [
 ];
 
 export default function MedicalReportsView() {
-  const [docs, setDocs] = useState<DocumentRecord[]>([]);
+  const { user } = useAuth();
+  const [docs, setDocs] = useState<DocumentRecord[]>(defaultDocs);
   const [name, setName] = useState("");
   const [category, setCategory] = useState("Lab Reports");
   const [doctor, setDoctor] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("nirogi_medical_docs");
-    if (saved) {
-      try {
-        setDocs(JSON.parse(saved));
-      } catch (e) {
-        setDocs(defaultDocs);
+    const fetchLiveMedicalReports = async () => {
+      if (user?.id) {
+        try {
+          const { data } = await supabase
+            .from("medical_reports")
+            .select("*")
+            .eq("patient_id", user.id)
+            .order("created_at", { ascending: false });
+
+          if (data && data.length > 0) {
+            const mapped = data.map((d) => ({
+              id: d.id,
+              name: d.name,
+              category: d.category,
+              date: new Date(d.created_at).toLocaleDateString([], { month: "short", day: "numeric", year: "numeric" }),
+              doctor: d.doctor_name || "Self Uploaded",
+              size: d.file_size || "1.5 MB",
+            }));
+            setDocs(mapped);
+            return;
+          }
+        } catch (err) {
+          console.error("Error fetching medical reports:", err);
+        }
       }
-    } else {
-      setDocs(defaultDocs);
-    }
-  }, []);
 
-  const saveDocs = (updated: DocumentRecord[]) => {
-    setDocs(updated);
-    localStorage.setItem("nirogi_medical_docs", JSON.stringify(updated));
-  };
+      const saved = localStorage.getItem("nirogi_medical_docs");
+      if (saved) {
+        try {
+          setDocs(JSON.parse(saved));
+        } catch (e) {
+          setDocs(defaultDocs);
+        }
+      }
+    };
 
-  const handleUpload = (e: React.FormEvent) => {
+    fetchLiveMedicalReports();
+  }, [user]);
+
+  const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name) {
       toast.error("Please enter a document name.");
       return;
     }
 
-    const newDoc: DocumentRecord = {
+    setUploading(true);
+    const newDocSize = `${(Math.random() * 2 + 0.5).toFixed(1)} MB`;
+    const docObj: DocumentRecord = {
       id: Date.now().toString(),
       name,
       category,
       date: new Date().toLocaleDateString([], { month: "short", day: "numeric", year: "numeric" }),
       doctor: doctor || "Self Uploaded",
-      size: `${(Math.random() * 2 + 0.5).toFixed(1)} MB`
+      size: newDocSize
     };
 
-    saveDocs([newDoc, ...docs]);
+    if (user?.id) {
+      try {
+        const { data, error } = await supabase
+          .from("medical_reports")
+          .insert({
+            patient_id: user.id,
+            name: name,
+            category: category,
+            doctor_name: doctor || "Self Uploaded",
+            file_size: newDocSize
+          })
+          .select()
+          .single();
+
+        if (!error && data) {
+          docObj.id = data.id;
+          toast.success(`Document uploaded & saved to database!`);
+        }
+      } catch (err) {
+        console.error("Supabase medical report insert error:", err);
+      }
+    }
+
+    const updated = [docObj, ...docs];
+    setDocs(updated);
+    localStorage.setItem("nirogi_medical_docs", JSON.stringify(updated));
     setName("");
     setDoctor("");
-    toast.success(`Uploaded Document: ${name}`);
+    setUploading(false);
   };
 
-  const handleDownload = (name: string) => {
-    toast.success(`Downloading ${name}...`);
+  const handleDownload = (docName: string) => {
+    toast.success(`Downloading ${docName}...`);
   };
 
   return (
     <div className="space-y-6 font-['Manrope',sans-serif]">
-      {/* Header */}
       <section className="relative overflow-hidden rounded-2xl border border-border/80 bg-card p-6 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center shadow-sm">
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-10 dark:opacity-20 pointer-events-none"
@@ -86,7 +138,7 @@ export default function MedicalReportsView() {
           <p className="uppercase-label text-primary font-bold">Patient Workspace</p>
           <h1 className="mt-1 text-2xl font-bold text-foreground">Medical Records Vault</h1>
           <p className="mt-1 max-w-2xl text-xs text-muted-foreground">
-            Secure locker for your diagnostic reports, physician consultations, and clinical files.
+            Secure database locker for your diagnostic reports, physician consultations, and clinical files.
           </p>
         </div>
         <div className="relative z-10 rounded-xl border border-border/60 bg-background/90 px-4 py-3 text-center backdrop-blur-sm">
@@ -96,111 +148,95 @@ export default function MedicalReportsView() {
       </section>
 
       <div className="grid gap-6 lg:grid-cols-[1.3fr_0.7fr]">
-        {/* Document Vault List */}
         <Card className="surface-panel">
           <CardHeader className="pb-3 border-b border-border/40">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <FileText className="h-5 w-5 text-primary" /> Stored Health Documents
+            <CardTitle className="text-base flex items-center gap-2">
+              <FileText className="h-4 w-4 text-primary" /> Active Vault Records
             </CardTitle>
-            <CardDescription>Secure vault with individual reports. Click to download or preview.</CardDescription>
+            <CardDescription>Click to preview or download signed report PDFs.</CardDescription>
           </CardHeader>
-          <CardContent className="pt-6">
-            <div className="space-y-3">
-              {docs.map((doc) => (
-                <div key={doc.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-border rounded-xl gap-4">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2.5 rounded-lg bg-primary/10 text-primary mt-0.5 shrink-0">
-                      <FileText className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-sm text-foreground leading-tight">{doc.name}</h4>
-                      <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-[10px] text-muted-foreground font-medium">
-                        <span className="flex items-center gap-1"><Tag className="h-3 w-3" /> {doc.category}</span>
-                        <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> {doc.date}</span>
-                        <span>Size: {doc.size}</span>
-                      </div>
-                      <p className="text-[10px] text-muted-foreground mt-1">Prescribed/Referred by: {doc.doctor}</p>
-                    </div>
+          <CardContent className="pt-4 space-y-3">
+            {docs.map((doc) => (
+              <div key={doc.id} className="rounded-xl border border-border/60 bg-background p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm hover:border-primary/40 transition">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold shrink-0">
+                    <FileText className="h-5 w-5" />
                   </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <Button variant="outline" size="sm" onClick={() => handleDownload(doc.name)} className="text-xs border-border flex items-center gap-1 h-9">
-                      <Download className="h-3.5 w-3.5" /> Download
-                    </Button>
+                  <div>
+                    <p className="text-xs font-extrabold text-foreground">{doc.name}</p>
+                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground mt-0.5">
+                      <span className="font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">{doc.category}</span>
+                      <span>• {doc.date}</span>
+                      <span>• {doc.doctor}</span>
+                      <span>({doc.size})</span>
+                    </div>
                   </div>
                 </div>
-              ))}
-              {docs.length === 0 && (
-                <p className="text-center text-xs text-muted-foreground py-6">Vault is empty. Add records on the right.</p>
-              )}
-            </div>
+
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-end pt-2 sm:pt-0 border-t sm:border-0 border-border/40">
+                  <Button size="sm" variant="outline" onClick={() => handleDownload(doc.name)} className="h-8 text-xs rounded-lg">
+                    <Download className="h-3.5 w-3.5 mr-1" /> PDF
+                  </Button>
+                </div>
+              </div>
+            ))}
           </CardContent>
         </Card>
 
-        {/* Sidebar Vault Form */}
-        <div className="space-y-6">
-          <Card className="surface-panel h-fit">
-            <CardHeader className="pb-3 border-b border-border/40">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Plus className="h-4 w-4 text-primary" /> Upload New Record
-              </CardTitle>
-              <CardDescription>Digitize and archive diagnostic scans.</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <form onSubmit={handleUpload} className="space-y-4">
-                <div className="space-y-1.5">
-                  <Label htmlFor="doc-name" className="text-xs font-bold">Document Title</Label>
-                  <Input 
-                    id="doc-name" 
-                    placeholder="e.g. Apollo Lipids Panel Report" 
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="h-9 text-xs"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="doc-cat" className="text-xs font-bold">Category</Label>
-                    <Select value={category} onValueChange={setCategory}>
-                      <SelectTrigger className="h-9 text-xs">
-                        <SelectValue placeholder="Lab Reports" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Lab Reports">Lab Reports</SelectItem>
-                        <SelectItem value="Imaging Scan">Imaging Scan</SelectItem>
-                        <SelectItem value="Hospital Records">Hospital Records</SelectItem>
-                        <SelectItem value="Prescription PDF">Prescription PDF</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="doc-ref" className="text-xs font-bold">Physician Name</Label>
-                    <Input 
-                      id="doc-ref" 
-                      placeholder="e.g. Dr. स्नेहा राव" 
-                      value={doctor}
-                      onChange={(e) => setDoctor(e.target.value)}
-                      className="h-9 text-xs"
-                    />
-                  </div>
-                </div>
-                <Button type="submit" className="w-full text-xs font-bold h-9">
-                  Upload & File Record
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-
-          {/* Secure Lockout Info */}
-          <Card className="surface-panel">
-            <CardContent className="pt-6 text-xs text-muted-foreground flex gap-2.5">
-              <ShieldCheck className="h-5 w-5 text-primary shrink-0" />
-              <div>
-                <span className="font-bold text-foreground block">AES-256 Vault Encryption</span>
-                <p className="mt-0.5 leading-relaxed">Your files are encrypted during storage. Only verified doctors can view authorized scan records.</p>
+        {/* Upload Form */}
+        <Card className="surface-panel h-fit">
+          <CardHeader className="pb-3 border-b border-border/40">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Plus className="h-4 w-4 text-primary" /> Upload New Report
+            </CardTitle>
+            <CardDescription>Save new diagnostic files to database vault.</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-4">
+            <form onSubmit={handleUpload} className="space-y-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="docName" className="text-xs font-semibold">Document Title</Label>
+                <Input
+                  id="docName"
+                  placeholder="e.g. Lipid Profile Lab Test"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="rounded-xl text-xs h-9"
+                />
               </div>
-            </CardContent>
-          </Card>
-        </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold">Category</Label>
+                <Select value={category} onValueChange={setCategory}>
+                  <SelectTrigger className="rounded-xl text-xs h-9">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Lab Reports">Lab Reports</SelectItem>
+                    <SelectItem value="Imaging Scan">Imaging Scan</SelectItem>
+                    <SelectItem value="Hospital Records">Hospital Records</SelectItem>
+                    <SelectItem value="Prescriptions">Prescriptions</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="docDoctor" className="text-xs font-semibold">Attending Doctor / Lab</Label>
+                <Input
+                  id="docDoctor"
+                  placeholder="e.g. Dr. Kavya Menon"
+                  value={doctor}
+                  onChange={(e) => setDoctor(e.target.value)}
+                  className="rounded-xl text-xs h-9"
+                />
+              </div>
+
+              <Button type="submit" disabled={uploading} className="w-full rounded-xl text-xs font-bold bg-primary text-white hover:bg-primary/90">
+                {uploading ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Plus className="h-4 w-4 mr-1" />}
+                Save Document to Vault
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

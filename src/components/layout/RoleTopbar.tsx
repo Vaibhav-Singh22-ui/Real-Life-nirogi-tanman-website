@@ -17,15 +17,27 @@ import { useRouter, usePathname } from "next/navigation";
 import { supabase } from "@/integrations/supabase/client";
 import Link from "next/link";
 
+import { useAuth } from "@/context/AuthContext";
+
 const RoleTopbar = ({ role }: { role: AppRole }) => {
   const router = useRouter();
   const pathname = usePathname();
+  const { user, profile, signOut } = useAuth();
 
   const handleLogout = async () => {
     localStorage.removeItem("nirogi_signup_role");
-    await supabase.auth.signOut();
+    await signOut();
     router.replace("/login");
   };
+
+  const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
+  const displayEmail = user?.email || "user@nirogi.app";
+  const initials = displayName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .substring(0, 2)
+    .toUpperCase();
 
   const profilePath = role === "patient" ? "/patient/profile" : `/${role}/settings`;
   const isDashboard = pathname ? pathname.endsWith("/dashboard") : false;
@@ -60,21 +72,26 @@ const RoleTopbar = ({ role }: { role: AppRole }) => {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-10 gap-2 px-1 focus-visible:ring-0">
               <Avatar className="h-8 w-8 ring-2 ring-primary/20">
-                <AvatarFallback className="bg-primary/10 text-primary font-medium text-xs">NT</AvatarFallback>
+                <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs">{initials}</AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48 animate-in fade-in-80 slide-in-from-top-1 duration-200">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuContent align="end" className="w-56 animate-in fade-in-80 slide-in-from-top-1 duration-200">
+            <DropdownMenuLabel>
+              <div className="flex flex-col space-y-1">
+                <p className="text-xs font-bold text-foreground leading-none">{displayName}</p>
+                <p className="text-[10px] text-muted-foreground leading-none truncate">{displayEmail}</p>
+              </div>
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href={profilePath}>Profile</Link>
+              <Link href={profilePath}>Profile Settings</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href={`/${role}/settings`}>Settings</Link>
+              <Link href={`/${role}/settings`}>Account Settings</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+            <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-rose-500 font-semibold">
               Logout
             </DropdownMenuItem>
           </DropdownMenuContent>

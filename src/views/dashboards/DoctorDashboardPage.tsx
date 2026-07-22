@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Brain,
   Calendar,
@@ -19,7 +21,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StatCard from "@/components/app/StatCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -39,45 +41,8 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Legend } from "recharts";
-
-const statsData = [
-  {
-    title: "Patients Today",
-    value: "18",
-    change: "+3 vs yesterday",
-    trend: "up" as const,
-    icon: Users,
-    graphVariant: "ecg" as const,
-    accentColor: "emerald" as const,
-  },
-  {
-    title: "Avg Consultation Time",
-    value: "22 min",
-    change: "Optimal limit (30m)",
-    trend: "neutral" as const,
-    icon: Clock,
-    graphVariant: "wave" as const,
-    accentColor: "indigo" as const,
-  },
-  {
-    title: "Pending Clinical Notes",
-    value: "5",
-    change: "-2 from morning",
-    trend: "up" as const,
-    icon: FileText,
-    graphVariant: "bars" as const,
-    accentColor: "amber" as const,
-  },
-  {
-    title: "Today's Est. Revenue",
-    value: "₹32,400",
-    change: "+14% vs weekly avg",
-    trend: "up" as const,
-    icon: BadgeDollarSign,
-    graphVariant: "area" as const,
-    accentColor: "teal" as const,
-  },
-];
+import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/lib/supabase";
 
 const consultationSchedule = [
   { id: "C-101", patientName: "Aisha Mehta", age: "34", gender: "F", time: "09:30 AM", type: "Metabolic Review", status: "Checked-in", mode: "In-Person" },
@@ -102,17 +67,96 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const DoctorDashboardPage = () => {
+  const { user, profile } = useAuth();
   const [schedule, setSchedule] = useState(consultationSchedule);
+  const [liveAppointmentsCount, setLiveAppointmentsCount] = useState<number>(18);
+
+  const doctorName = profile?.full_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Dr. Vikram Seth";
+  const doctorEmail = user?.email || "doctor@nirogi.app";
+  const specialty = profile?.roleDetails?.specialty || "Senior Ayurvedic Physician, MD";
+
+  useEffect(() => {
+    const fetchLiveDoctorBookings = async () => {
+      if (user?.id) {
+        try {
+          const { data, count } = await supabase
+            .from("bookings")
+            .select("*", { count: "exact" })
+            .or(`doctor_id.eq.${user.id},doctor_name.ilike.%${doctorName}%`);
+
+          if (data && data.length > 0) {
+            const mapped = data.map((b, idx) => ({
+              id: b.id.substring(0, 6).toUpperCase(),
+              patientName: b.patient_name || `Patient #${idx + 1}`,
+              age: "36",
+              gender: "M/F",
+              time: b.slot_time || "10:00 AM",
+              type: b.consultation_type || "Ayurvedic Review",
+              status: b.status === "confirmed" ? "Checked-in" : b.status,
+              mode: b.consultation_type === "in-person" ? "In-Person" : "Video Call",
+            }));
+            setSchedule(mapped);
+            setLiveAppointmentsCount(count || data.length);
+          }
+        } catch (err) {
+          console.error("Live doctor booking fetch error:", err);
+        }
+      }
+    };
+
+    fetchLiveDoctorBookings();
+  }, [user, doctorName]);
+
+  const statsData = [
+    {
+      title: "Patients Today",
+      value: String(liveAppointmentsCount),
+      change: "+3 vs yesterday",
+      trend: "up" as const,
+      icon: Users,
+      graphVariant: "ecg" as const,
+      accentColor: "emerald" as const,
+    },
+    {
+      title: "Avg Consultation Time",
+      value: "22 min",
+      change: "Optimal limit (30m)",
+      trend: "neutral" as const,
+      icon: Clock,
+      graphVariant: "wave" as const,
+      accentColor: "indigo" as const,
+    },
+    {
+      title: "Pending Clinical Notes",
+      value: "5",
+      change: "-2 from morning",
+      trend: "up" as const,
+      icon: FileText,
+      graphVariant: "bars" as const,
+      accentColor: "amber" as const,
+    },
+    {
+      title: "Today's Est. Revenue",
+      value: "₹32,400",
+      change: "+14% vs weekly avg",
+      trend: "up" as const,
+      icon: BadgeDollarSign,
+      graphVariant: "area" as const,
+      accentColor: "teal" as const,
+    },
+  ];
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "Checked-in":
+      case "confirmed":
         return <Badge className="bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800" variant="outline">{status}</Badge>;
       case "Waiting":
         return <Badge className="bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800 animate-pulse" variant="outline">{status}</Badge>;
       case "In Consultation":
         return <Badge className="bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800" variant="outline">{status}</Badge>;
       case "Completed":
+      case "completed":
         return <Badge className="bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800" variant="outline">{status}</Badge>;
       default:
         return <Badge className="bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-900/30 dark:text-slate-300 dark:border-slate-800" variant="outline">{status}</Badge>;
@@ -121,16 +165,14 @@ const DoctorDashboardPage = () => {
 
   return (
     <div className="space-y-6 font-['Manrope',sans-serif]">
-      {/* High-End Visual Doctor Hero Banner */}
+      {/* Dynamic Doctor Hero Banner */}
       <section className="relative overflow-hidden rounded-2xl border border-border/60 bg-card shadow-xl transition-all duration-300">
-        {/* Background Visual Medical Banner Image */}
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-20 dark:opacity-30 transition-transform duration-1000 scale-105 hover:scale-100"
           style={{
             backgroundImage: `url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1400&auto=format&fit=crop')`,
           }}
         />
-        {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-transparent" />
 
         <div className="relative z-10 p-6 md:p-8 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-center">
@@ -138,20 +180,20 @@ const DoctorDashboardPage = () => {
             <div className="flex flex-wrap items-center gap-2">
               <Badge className="bg-primary/15 text-primary border-primary/20 hover:bg-primary/20 px-3 py-1 text-xs font-bold uppercase tracking-wider">
                 <Stethoscope className="h-3.5 w-3.5 mr-1 animate-pulse" />
-                Integrative Clinical Desk
+                Doctor Clinical Workspace
               </Badge>
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
-                Live Consultations Active
+                Desk Active ({doctorEmail})
               </span>
             </div>
 
             <div>
               <h1 className="text-2xl md:text-3xl font-extrabold text-foreground tracking-tight">
-                Good Morning, Dr. Kavya Menon, MD
+                Good Morning, {doctorName}
               </h1>
               <p className="max-w-xl text-xs md:text-sm text-muted-foreground leading-relaxed mt-1">
-                Integrative Medicine & Metabolic Care Workspace. You have <strong className="text-foreground font-bold">18 consultations</strong> scheduled today across clinical & telehealth sessions.
+                {specialty}. You have <strong className="text-foreground font-bold">{liveAppointmentsCount} consultations</strong> scheduled across clinical & telehealth sessions.
               </p>
             </div>
           </div>
@@ -173,7 +215,7 @@ const DoctorDashboardPage = () => {
         </div>
       </section>
 
-      {/* Top Stat Cards with Background SVG Sparkline Graphs */}
+      {/* Top Stat Cards */}
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {statsData.map((item) => (
           <StatCard
@@ -191,7 +233,6 @@ const DoctorDashboardPage = () => {
 
       {/* Main Content Grid */}
       <section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.4fr_0.6fr]">
-        {/* Real-time Consultations & Patient Queue */}
         <Card className="surface-panel shadow-lg border-border/80">
           <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-border/40">
             <div>
@@ -199,7 +240,7 @@ const DoctorDashboardPage = () => {
                 <ClipboardCheck className="h-5 w-5 text-primary" />
                 Today's Consultations Pipeline
               </CardTitle>
-              <CardDescription className="text-xs">Real-time triage queue and active patient sessions</CardDescription>
+              <CardDescription className="text-xs">Real-time triage queue for {doctorName}</CardDescription>
             </div>
             <Button size="sm" asChild variant="ghost" className="hover:bg-primary/10 hover:text-primary">
               <Link href="/doctor/appointments" className="text-primary text-xs font-semibold flex items-center gap-1">
@@ -209,7 +250,6 @@ const DoctorDashboardPage = () => {
             </Button>
           </CardHeader>
           <CardContent className="pt-4">
-            {/* Desktop Table View */}
             <div className="hidden md:block overflow-x-auto">
               <Table>
                 <TableHeader>
@@ -229,7 +269,7 @@ const DoctorDashboardPage = () => {
                       <TableCell>
                         <div className="flex items-center gap-2.5">
                           <div className="h-8 w-8 rounded-full bg-primary/10 text-primary font-extrabold flex items-center justify-center text-xs shrink-0">
-                            {session.patientName.split(" ").map(n => n[0]).join("")}
+                            {session.patientName.split(" ").map((n: string) => n[0]).join("")}
                           </div>
                           <div>
                             <p className="font-bold text-xs text-foreground leading-tight">{session.patientName}</p>
@@ -261,49 +301,18 @@ const DoctorDashboardPage = () => {
                 </TableBody>
               </Table>
             </div>
-
-            {/* Mobile Stacked List View */}
-            <div className="block md:hidden space-y-3">
-              {schedule.map((session) => (
-                <div key={session.id} className="rounded-xl border border-border/80 bg-background p-4 space-y-3 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-extrabold text-primary">{session.time}</span>
-                    {getStatusBadge(session.status)}
-                  </div>
-                  <div>
-                    <p className="font-bold text-sm text-foreground">{session.patientName}</p>
-                    <p className="text-xs text-muted-foreground">{session.age} yrs · {session.gender} · {session.type}</p>
-                  </div>
-                  <div className="flex items-center justify-between pt-2.5 border-t border-border/40">
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      {session.mode === "Video Call" ? (
-                        <Video className="h-3.5 w-3.5 text-primary" />
-                      ) : (
-                        <Stethoscope className="h-3.5 w-3.5 text-emerald-600" />
-                      )}
-                      <span>{session.mode}</span>
-                    </div>
-                    <Button size="sm" asChild variant={session.status === "In Consultation" || session.status === "Waiting" ? "default" : "outline"} className="h-8 text-xs font-semibold">
-                      <Link href={`/doctor/consultation?id=${session.id}`}>
-                        {session.status === "Completed" ? "View Notes" : "Start"}
-                      </Link>
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
           </CardContent>
         </Card>
 
-        {/* Clinical Co-Pilot AI & Wearable Vitals Telemetry */}
+        {/* Clinical Co-Pilot AI */}
         <Card className="surface-panel shadow-lg border-border/80 flex flex-col justify-between">
           <div>
             <CardHeader className="pb-3 border-b border-border/40">
               <CardTitle className="text-lg font-bold flex items-center gap-2">
                 <Brain className="h-5 w-5 text-primary animate-pulse" />
-                Clinical Co-Pilot AI
+                Clinical AI Assistant
               </CardTitle>
-              <CardDescription className="text-xs">Wearables telemetry & adaptive care alerts</CardDescription>
+              <CardDescription className="text-xs">Wearables telemetry & active patient alerts</CardDescription>
             </CardHeader>
             <CardContent className="pt-4 space-y-4">
               <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3.5 space-y-1 relative overflow-hidden">
@@ -340,14 +349,14 @@ const DoctorDashboardPage = () => {
         </Card>
       </section>
 
-      {/* Clinic Performance Analytics Recharts Widget */}
+      {/* Analytics Recharts Widget */}
       <section className="grid grid-cols-1 gap-6">
         <Card className="surface-panel shadow-lg border-border/80">
           <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-border/40">
             <div>
               <CardTitle className="text-lg font-bold flex items-center gap-2">
                 <Activity className="h-5 w-5 text-primary" />
-                Clinic Activity & Consultation Analytics
+                Clinic Activity Analytics
               </CardTitle>
               <CardDescription className="text-xs">Weekly patient volume vs total active clinical hours</CardDescription>
             </div>

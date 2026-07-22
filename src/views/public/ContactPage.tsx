@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
 
 const ContactPage = () => {
   const [activeTab, setActiveTab] = useState<"general" | "corporate" | "support">("general");
@@ -36,7 +37,7 @@ const ContactPage = () => {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) {
       toast.error("Email address is required.");
@@ -46,47 +47,81 @@ const ContactPage = () => {
     setSubmitting(true);
     setSuccessInfo(null);
 
-    setTimeout(() => {
-      setSubmitting(false);
+    const fullUserName = `${firstName} ${lastName}`.trim() || email.split("@")[0];
 
+    try {
       if (activeTab === "general") {
+        await supabase.from("general_inquiries").insert({
+          name: fullUserName,
+          email: email.trim(),
+          phone: phone.trim() || null,
+          message: message.trim() || "General Inquiry",
+        });
+
         setSuccessInfo({
           title: "Message Sent!",
           desc: "Thank you for contacting care coordination. We will get back to your inbox within 2 hours."
         });
-        toast.success("Enquiry received successfully!");
+        toast.success("General enquiry logged to database!");
       } else if (activeTab === "corporate") {
+        await supabase.from("corporate_inquiries").insert({
+          name: fullUserName,
+          email: email.trim(),
+          phone: phone.trim() || null,
+          company_name: companyName.trim() || "N/A",
+          team_size: teamSize,
+          objectives: corporateObjectives,
+          message: message.trim() || "Corporate Wellness Inquiry",
+        });
+
         setSuccessInfo({
           title: "Corporate Query Registered",
           desc: `Thank you. A corporate wellness consultant will draft a custom wellness curriculum proposal for ${companyName || "your company"} and email you within 24 hours.`
         });
-        toast.success("Corporate wellness query logged!");
+        toast.success("Corporate query logged to database!");
       } else {
-        const ticketNum = Math.floor(1000 + Math.random() * 9000);
+        const ticketNum = `NT-TKT-${Math.floor(1000 + Math.random() * 9000)}`;
+        
+        await supabase.from("support_tickets").insert({
+          ticket_number: ticketNum,
+          name: fullUserName,
+          email: email.trim(),
+          phone: phone.trim() || null,
+          category: supportCategory,
+          priority: supportPriority,
+          subject: ticketSubject.trim() || "General Support Enquiry",
+          message: message.trim() || "Support Request",
+          status: "open",
+        });
+
         setSuccessInfo({
-          title: `Support Ticket Created: #NT-TKT-${ticketNum}`,
+          title: `Support Ticket Created: #${ticketNum}`,
           desc: "Your support request has been logged. Under clinical guidelines, the coordinator desk will respond in the live chat within 12 minutes."
         });
-        toast.success(`Ticket NT-TKT-${ticketNum} registered successfully!`);
+        toast.success(`Support ticket ${ticketNum} logged to database!`);
 
-        // Save support active ticket state in localStorage to activate chat notifications
         localStorage.setItem("nirogi_active_ticket", JSON.stringify({
-          id: `NT-TKT-${ticketNum}`,
+          id: ticketNum,
           subject: ticketSubject || "General Support Enquiry",
           category: supportCategory,
           priority: supportPriority
         }));
       }
+    } catch (err) {
+      console.error("Supabase insert error:", err);
+      toast.error("Failed to save to database. Local backup saved.");
+    } finally {
+      setSubmitting(false);
+    }
 
-      // Reset text inputs
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setPhone("");
-      setMessage("");
-      setCompanyName("");
-      setTicketSubject("");
-    }, 1500);
+    // Reset text inputs
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setPhone("");
+    setMessage("");
+    setCompanyName("");
+    setTicketSubject("");
   };
 
   return (

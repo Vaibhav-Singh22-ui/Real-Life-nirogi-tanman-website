@@ -12,17 +12,34 @@ type SharedSettingsViewProps = {
   roleLabel: string;
 };
 
+import { useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/lib/supabase";
+
 const SharedSettingsView = ({ roleLabel }: SharedSettingsViewProps) => {
+  const { user, profile: authProfile, refreshProfile } = useAuth();
   const [loading, setLoading] = useState(false);
   
   // Form states
   const [profile, setProfile] = useState({
-    name: roleLabel === "Patient" ? "Vaibhav Singh" : `Dr. Kavya Menon`,
-    email: roleLabel === "Patient" ? "vaibhav@nirogi.app" : `kavya.menon@nirogi.app`,
-    phone: "+91 98765 43210",
+    name: "",
+    email: "",
+    phone: "",
     language: "english",
     timezone: "ist"
   });
+
+  useEffect(() => {
+    if (user || authProfile) {
+      setProfile({
+        name: authProfile?.full_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "",
+        email: user?.email || authProfile?.email || "",
+        phone: authProfile?.phone || user?.phone || user?.user_metadata?.phone || "",
+        language: "english",
+        timezone: "ist"
+      });
+    }
+  }, [user, authProfile]);
 
   const [notifications, setNotifications] = useState({
     emailAlerts: true,
@@ -46,12 +63,34 @@ const SharedSettingsView = ({ roleLabel }: SharedSettingsViewProps) => {
 
   const [theme, setTheme] = useState("system");
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setLoading(true);
-    setTimeout(() => {
+    try {
+      if (user?.id) {
+        const { error } = await supabase
+          .from("profiles")
+          .update({
+            full_name: profile.name,
+            phone: profile.phone,
+          })
+          .eq("id", user.id);
+
+        if (error) {
+          console.error("Profile update error:", error);
+          toast.error("Failed to update profile in database.");
+        } else {
+          await refreshProfile();
+          toast.success("Profile saved and synced to database!");
+        }
+      } else {
+        toast.success("Settings saved locally!");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Error updating settings.");
+    } finally {
       setLoading(false);
-      toast.success("Settings saved successfully!");
-    }, 800);
+    }
   };
 
   return (
@@ -115,6 +154,7 @@ const SharedSettingsView = ({ roleLabel }: SharedSettingsViewProps) => {
                   <Label htmlFor="settingsPhone">Contact Phone</Label>
                   <Input 
                     id="settingsPhone" 
+                    placeholder="Enter phone number..."
                     value={profile.phone}
                     onChange={(e) => setProfile(p => ({ ...p, phone: e.target.value }))}
                     className="rounded-xl h-10"

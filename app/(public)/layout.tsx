@@ -19,6 +19,7 @@ export default function PublicLayout({
         initial={{ opacity: 0 }}
         animate={showContent ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="sticky top-0 z-50"
       >
         <PublicNavbar />
       </motion.div>

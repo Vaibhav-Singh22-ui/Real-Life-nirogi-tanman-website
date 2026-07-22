@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Brain,
   Calendar,
@@ -15,7 +17,7 @@ import {
   HeartPulse,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StatCard from "@/components/app/StatCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -35,45 +37,8 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Legend } from "recharts";
-
-const statsData = [
-  {
-    title: "Sessions Today",
-    value: "9",
-    change: "+2 vs daily average",
-    trend: "up" as const,
-    icon: Waves,
-    graphVariant: "wave" as const,
-    accentColor: "emerald" as const,
-  },
-  {
-    title: "Attendance Rate",
-    value: "92%",
-    change: "+4% vs last week",
-    trend: "up" as const,
-    icon: Users,
-    graphVariant: "circle" as const,
-    accentColor: "teal" as const,
-  },
-  {
-    title: "Active Program Cohorts",
-    value: "16",
-    change: "Therapeutic classes",
-    trend: "neutral" as const,
-    icon: Activity,
-    graphVariant: "bars" as const,
-    accentColor: "indigo" as const,
-  },
-  {
-    title: "Evaluations Due",
-    value: "11",
-    change: "This week",
-    trend: "neutral" as const,
-    icon: ClipboardCheck,
-    graphVariant: "area" as const,
-    accentColor: "amber" as const,
-  },
-];
+import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/lib/supabase";
 
 const sessionsList = [
   { id: "YG-301", participant: "Niharika Sen", age: "29", routine: "Therapeutic Spine Mobility", time: "07:00 AM", status: "Attended", type: "1-on-1" },
@@ -98,17 +63,91 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const YogaDashboardPage = () => {
+  const { user, profile } = useAuth();
   const [sessions, setSessions] = useState(sessionsList);
+
+  const instructorName = profile?.full_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Neel Joshi";
+  const instructorEmail = user?.email || "yoga@nirogi.app";
+  const specialization = profile?.roleDetails?.specialization || "Spine Decompression & Tele-Yoga Specialist";
+
+  useEffect(() => {
+    const fetchLiveYogaSessions = async () => {
+      if (user?.id) {
+        try {
+          const { data } = await supabase
+            .from("yoga_sessions")
+            .select("*")
+            .or(`instructor_id.eq.${user.id},notes.ilike.%${instructorName}%`);
+
+          if (data && data.length > 0) {
+            const mapped = data.map((s, idx) => ({
+              id: s.id.substring(0, 6).toUpperCase(),
+              participant: s.patient_name || `Participant #${idx + 1}`,
+              age: "32",
+              routine: s.title || "Spine Decompression Routine",
+              time: s.slot_time || "08:00 AM",
+              status: s.status === "scheduled" ? "Checked in" : s.status,
+              type: s.category || "1-on-1",
+            }));
+            setSessions(mapped);
+          }
+        } catch (err) {
+          console.error("Live yoga session fetch error:", err);
+        }
+      }
+    };
+
+    fetchLiveYogaSessions();
+  }, [user, instructorName]);
+
+  const statsData = [
+    {
+      title: "Sessions Today",
+      value: String(sessions.length),
+      change: "+2 vs daily average",
+      trend: "up" as const,
+      icon: Waves,
+      graphVariant: "wave" as const,
+      accentColor: "emerald" as const,
+    },
+    {
+      title: "Attendance Rate",
+      value: "92%",
+      change: "+4% vs last week",
+      trend: "up" as const,
+      icon: Users,
+      graphVariant: "circle" as const,
+      accentColor: "teal" as const,
+    },
+    {
+      title: "Active Program Cohorts",
+      value: "16",
+      change: "Therapeutic classes",
+      trend: "neutral" as const,
+      icon: Activity,
+      graphVariant: "bars" as const,
+      accentColor: "indigo" as const,
+    },
+    {
+      title: "Evaluations Due",
+      value: "11",
+      change: "This week",
+      trend: "neutral" as const,
+      icon: ClipboardCheck,
+      graphVariant: "area" as const,
+      accentColor: "amber" as const,
+    },
+  ];
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "Attended":
       case "Completed":
+      case "completed":
         return <Badge className="bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800" variant="outline">{status}</Badge>;
       case "Checked in":
+      case "scheduled":
         return <Badge className="bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800 animate-pulse" variant="outline">{status}</Badge>;
-      case "Scheduled":
-        return <Badge className="bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-900/30 dark:text-slate-300 dark:border-slate-800" variant="outline">{status}</Badge>;
       default:
         return <Badge className="bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-900/30 dark:text-slate-300 dark:border-slate-800" variant="outline">{status}</Badge>;
     }
@@ -116,16 +155,14 @@ const YogaDashboardPage = () => {
 
   return (
     <div className="space-y-6 font-['Manrope',sans-serif]">
-      {/* High-End Serene Yoga Hero Banner */}
+      {/* Dynamic Yoga Hero Banner */}
       <section className="relative overflow-hidden rounded-2xl border border-border/60 bg-card shadow-xl transition-all duration-300">
-        {/* Background Visual Yoga Studio Image */}
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-20 dark:opacity-30 transition-transform duration-1000 scale-105 hover:scale-100"
           style={{
             backgroundImage: `url('https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=1400&auto=format&fit=crop')`,
           }}
         />
-        {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-transparent" />
 
         <div className="relative z-10 p-6 md:p-8 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-center">
@@ -137,16 +174,16 @@ const YogaDashboardPage = () => {
               </Badge>
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-600 dark:text-teal-400 bg-teal-500/10 px-2.5 py-0.5 rounded-full border border-teal-500/20">
                 <span className="h-2 w-2 rounded-full bg-teal-500 animate-ping" />
-                Live Sessions Active
+                Studio Active ({instructorEmail})
               </span>
             </div>
 
             <div>
               <h1 className="text-2xl md:text-3xl font-extrabold text-foreground tracking-tight">
-                Namaste, Acharya Arjun Dev
+                Namaste, {instructorName}
               </h1>
               <p className="max-w-xl text-xs md:text-sm text-muted-foreground leading-relaxed mt-1">
-                Therapeutic Yoga Workspace. You are conducting <strong className="text-foreground font-bold">9 sessions</strong> today across 1-on-1 & group classes.
+                {specialization}. You are conducting <strong className="text-foreground font-bold">{sessions.length} sessions</strong> today across 1-on-1 & group classes.
               </p>
             </div>
           </div>
@@ -168,7 +205,7 @@ const YogaDashboardPage = () => {
         </div>
       </section>
 
-      {/* Top Stat Cards with Background SVG Sparkline Graphs */}
+      {/* Top Stat Cards */}
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {statsData.map((item) => (
           <StatCard
@@ -186,7 +223,6 @@ const YogaDashboardPage = () => {
 
       {/* Main Content Grid */}
       <section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.4fr_0.6fr]">
-        {/* Today's Practice Schedule */}
         <Card className="surface-panel shadow-lg border-border/80">
           <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-border/40">
             <div>
@@ -194,7 +230,7 @@ const YogaDashboardPage = () => {
                 <Waves className="h-5 w-5 text-emerald-600" />
                 Today's Practice Schedule
               </CardTitle>
-              <CardDescription className="text-xs">Therapeutic classes, asana routines, and participant check-ins</CardDescription>
+              <CardDescription className="text-xs">Therapeutic classes & student check-ins for {instructorName}</CardDescription>
             </div>
             <Button size="sm" asChild variant="ghost" className="hover:bg-emerald-500/10 hover:text-emerald-600">
               <Link href="/yoga/calendar" className="text-emerald-600 text-xs font-semibold flex items-center gap-1">
@@ -204,7 +240,6 @@ const YogaDashboardPage = () => {
             </Button>
           </CardHeader>
           <CardContent className="pt-4">
-            {/* Desktop Table View */}
             <div className="hidden md:block overflow-x-auto">
               <Table>
                 <TableHeader>
@@ -224,7 +259,7 @@ const YogaDashboardPage = () => {
                       <TableCell>
                         <div className="flex items-center gap-2.5">
                           <div className="h-8 w-8 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-extrabold flex items-center justify-center text-xs shrink-0">
-                            {session.participant.split(" ").map(n => n[0]).join("")}
+                            {session.participant.split(" ").map((n: string) => n[0]).join("")}
                           </div>
                           <div>
                             <p className="font-bold text-xs text-foreground leading-tight">{session.participant}</p>
@@ -247,34 +282,10 @@ const YogaDashboardPage = () => {
                 </TableBody>
               </Table>
             </div>
-
-            {/* Mobile Stacked List View */}
-            <div className="block md:hidden space-y-3">
-              {sessions.map((session) => (
-                <div key={session.id} className="rounded-xl border border-border/80 bg-background p-4 space-y-3 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-extrabold text-emerald-600">{session.time}</span>
-                    {getStatusBadge(session.status)}
-                  </div>
-                  <div>
-                    <p className="font-bold text-sm text-foreground">{session.participant}</p>
-                    <p className="text-xs text-muted-foreground">{session.age} yrs · {session.routine}</p>
-                    <p className="text-[11px] text-muted-foreground mt-1">Format: {session.type}</p>
-                  </div>
-                  <div className="flex justify-end pt-2.5 border-t border-border/40">
-                    <Button size="sm" asChild variant={session.status === "Checked in" ? "default" : "outline"} className="w-full h-8 text-xs font-semibold">
-                      <Link href={`/yoga/attendance?id=${session.id}`}>
-                        {session.status === "Attended" || session.status === "Completed" ? "Feedback" : "Join Session"}
-                      </Link>
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
           </CardContent>
         </Card>
 
-        {/* Yoga Pose AI Co-Pilot & Posture Alignment */}
+        {/* Yoga Pose AI Co-Pilot */}
         <Card className="surface-panel shadow-lg border-border/80 flex flex-col justify-between">
           <div>
             <CardHeader className="pb-3 border-b border-border/40">
@@ -319,7 +330,7 @@ const YogaDashboardPage = () => {
         </Card>
       </section>
 
-      {/* Practice Volume Recharts Analytics Widget */}
+      {/* Analytics Recharts Widget */}
       <section className="grid grid-cols-1 gap-6">
         <Card className="surface-panel shadow-lg border-border/80">
           <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-border/40">

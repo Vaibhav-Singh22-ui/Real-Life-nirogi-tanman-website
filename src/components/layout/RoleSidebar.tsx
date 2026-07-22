@@ -30,11 +30,11 @@ const RoleSidebar = ({ role }: RoleSidebarProps) => {
   const groups = roleSidebarGroups[role] || [];
 
   return (
-    <Sidebar collapsible="icon" variant="sidebar">
-      <SidebarHeader className="border-b border-sidebar-border p-3">
+    <Sidebar collapsible="icon" variant="sidebar" className="sticky top-0 h-svh z-30 shrink-0">
+      <SidebarHeader className="border-b border-sidebar-border p-3 shrink-0">
         <BrandMark compact={isCollapsed} />
       </SidebarHeader>
-      <SidebarContent className="space-y-1 py-2">
+      <SidebarContent className="space-y-1 py-2 overflow-y-auto">
         {groups.map((group, groupIdx) => (
           <SidebarGroup key={groupIdx} className="px-2 py-1">
             {!isCollapsed && (
@@ -62,7 +62,7 @@ const RoleSidebar = ({ role }: RoleSidebarProps) => {
           </SidebarGroup>
         ))}
       </SidebarContent>
-      <SidebarFooter className="border-t border-sidebar-border p-3">
+      <SidebarFooter className="border-t border-sidebar-border p-3 shrink-0">
         {!isCollapsed && (
           <div className="flex items-center justify-between text-[11px] text-sidebar-foreground/70 font-semibold">
             <span>Nirogi Tanman Platform</span>
