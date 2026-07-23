@@ -341,7 +341,7 @@ const ShopPage = () => {
                   <ShoppingCart className="h-3.5 w-3.5" />
                   Cart
                   {totalCount > 0 && (
-                    <span className="flex h-4.5 w-4.5 items-center justify-center rounded-full bg-[#EF4444] text-[9px] font-bold text-white shadow-sm">
+                    <span className="absolute -top-2 -right-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#EF4444] px-1.5 py-0.5 text-[10px] font-bold text-white shadow-sm ring-2 ring-white leading-none">
                       {totalCount}
                     </span>
                   )}
