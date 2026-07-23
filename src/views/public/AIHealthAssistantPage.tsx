@@ -8,8 +8,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-import ApiKeyConfig from "@/components/app/ApiKeyConfig";
-import { generateGeminiContent, getStoredApiKeys } from "@/lib/gemini";
+import { generateGeminiContent } from "@/lib/gemini";
 
 const AIHealthAssistantPage = () => {
   const [messages, setMessages] = useState<Array<{ role: "user" | "model"; text: string; keyInfo?: string; hasFile?: boolean }>>([
@@ -86,21 +85,18 @@ const AIHealthAssistantPage = () => {
       return;
     }
 
-    // Try real API key rotation first if keys are configured
-    const keys = getStoredApiKeys();
-    if (keys.length > 0) {
-      const systemInstruction = 
-        "You are the Nirogi Tanman AI Integrative Health Assistant. Guide the user in holistic wellness, combining Ayurvedic principles, nutrition, and yoga.";
-      const res = await generateGeminiContent(query, systemInstruction);
-      if (res.success) {
-        setMessages((prev) => [...prev, { 
-          role: "model", 
-          text: res.text, 
-          keyInfo: `Fulfilled via Key #${res.usedKeyIndex + 1}` 
-        }]);
-        setLoading(false);
-        return;
-      }
+    // Call AI engine with automatic multi-provider key rotation & failover
+    const systemInstruction = 
+      "You are the Nirogi Tanman AI Integrative Health Assistant. Guide the user in holistic wellness, combining Ayurvedic principles, nutrition, and yoga.";
+    const res = await generateGeminiContent(query, systemInstruction);
+    if (res.success) {
+      setMessages((prev) => [...prev, { 
+        role: "model", 
+        text: res.text, 
+        keyInfo: "Fulfillment: Nirogi AI Engine" 
+      }]);
+      setLoading(false);
+      return;
     }
 
     // Fallback Mock responses for guest preview

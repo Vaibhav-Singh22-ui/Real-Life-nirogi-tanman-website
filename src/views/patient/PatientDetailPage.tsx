@@ -13,7 +13,6 @@ import {
   Paperclip, Mic, Send, Play, Download, Eye, Loader2
 } from "lucide-react";
 import { format } from "date-fns";
-import ApiKeyConfig from "@/components/app/ApiKeyConfig";
 import { generateGeminiContent } from "@/lib/gemini";
 import SharedSettingsView from "@/components/app/SharedSettingsView";
 import SharedNotificationsView from "@/components/app/SharedNotificationsView";
@@ -867,18 +866,7 @@ const PatientAiAssistantView = () => {
             Your daily wellness synthesis is ready. Nirogi AI has analyzed your sleep and activity patterns.
           </p>
         </div>
-        <Button variant="outline" size="sm" onClick={() => setShowConfig(!showConfig)} className="flex items-center gap-1.5 shrink-0 self-start md:self-center">
-          <Settings className="h-4 w-4" />
-          {showConfig ? "Hide Key Setup" : "Setup API Keys"}
-        </Button>
       </section>
-
-      {/* API Configuration Setup block */}
-      {showConfig && (
-        <div className="animate-in fade-in slide-in-from-top duration-200">
-          <ApiKeyConfig />
-        </div>
-      )}
 
       {/* Two column grid layout matching mockup */}
       <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
@@ -1345,9 +1333,9 @@ Format the response beautifully with clean headers, bullet points, and highlight
 
     if (res.success) {
       setResult(res.text);
-      setUsedKey(`Fulfillment: Key #${res.usedKeyIndex + 1}`);
+      setUsedKey(`Fulfillment: Nirogi AI Engine`);
     } else {
-      toast.error(res.error || "Failed to call the Gemini API. Add or verify your keys in Key Setup.");
+      toast.error(res.error || "Failed to connect to AI service. Please try again later.");
     }
     setLoading(false);
   };
@@ -1380,18 +1368,7 @@ Format the response beautifully with clean headers, bullet points, and highlight
           </h1>
           <p className="text-sm text-muted-foreground">Discover your unique body constitution (Vata, Pitta, Kapha) and routine rules.</p>
         </div>
-        <Button variant="outline" size="sm" onClick={() => setShowConfig(!showConfig)} className="flex items-center gap-1.5 shrink-0">
-          <Settings className="h-4 w-4" />
-          {showConfig ? "Hide Key Setup" : "Setup API Keys"}
-        </Button>
       </section>
-
-      {/* Collapsible Key Setup */}
-      {showConfig && (
-        <div className="animate-in fade-in slide-in-from-top duration-200">
-          <ApiKeyConfig />
-        </div>
-      )}
 
       {/* survey step / result screen */}
       {!result ? (
