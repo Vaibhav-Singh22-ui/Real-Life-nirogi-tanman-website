@@ -14,12 +14,11 @@ const decodeKey = (encoded: string): string => {
 
 // System AI Agent API Keys with automatic rotation and multi-provider failover
 const SYSTEM_GROQ_KEY =
-  (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_GROQ_API_KEY) ||
-  decodeKey("Z3NrX2ZZNmJ6Ym96SU4z" + "MzlKTXBvaVdtV0dkeWIz" + "RllWNzk4b0FtSEZuMGRP" + "cDZIS2ZEVk1kenI=");
+  (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_GROQ_API_KEY) || "";
 
 const SYSTEM_GEMINI_KEY =
-  (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_GEMINI_API_KEY) ||
-  decodeKey("QVEuQWI4Uk42SlRNc3Ns" + "Wno5SG1GdFo5aHdUZkxl" + "RWhUNF8yN1ZaaWhMbTJy" + "RzRERk9OSHc=");
+  (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_GEMINI_API_KEY) || "";
+
 
 /**
  * Retrieves the stored Gemini API keys from localStorage
