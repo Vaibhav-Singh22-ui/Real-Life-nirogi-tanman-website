@@ -198,7 +198,7 @@ const DoctorDashboardPage = () => {
             </div>
           </div>
 
-          <div className="flex flex-wrap sm:flex-nowrap gap-3 shrink-0">
+          <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto shrink-0">
             <Button variant="outline" asChild className="w-full sm:w-auto shadow-sm hover:shadow-md transition">
               <Link href="/doctor/availability">
                 <Clock className="h-4 w-4 mr-2 text-primary" />
@@ -234,7 +234,7 @@ const DoctorDashboardPage = () => {
       {/* Main Content Grid */}
       <section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.4fr_0.6fr]">
         <Card className="surface-panel shadow-lg border-border/80">
-          <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-border/40">
+          <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border/40">
             <div>
               <CardTitle className="text-lg font-bold flex items-center gap-2">
                 <ClipboardCheck className="h-5 w-5 text-primary" />
@@ -242,7 +242,7 @@ const DoctorDashboardPage = () => {
               </CardTitle>
               <CardDescription className="text-xs">Real-time triage queue for {doctorName}</CardDescription>
             </div>
-            <Button size="sm" asChild variant="ghost" className="hover:bg-primary/10 hover:text-primary">
+            <Button size="sm" asChild variant="ghost" className="hover:bg-primary/10 hover:text-primary self-start sm:self-auto">
               <Link href="/doctor/appointments" className="text-primary text-xs font-semibold flex items-center gap-1">
                 View All Appointments
                 <ArrowUpRight className="h-3.5 w-3.5" />
@@ -250,6 +250,49 @@ const DoctorDashboardPage = () => {
             </Button>
           </CardHeader>
           <CardContent className="pt-4">
+            {/* Mobile Card List (< 768px) */}
+            <div className="block md:hidden space-y-3">
+              {schedule.map((session) => (
+                <div key={session.id} className="p-3.5 rounded-xl border border-border bg-card space-y-3 shadow-sm">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <div className="h-9 w-9 rounded-full bg-primary/10 text-primary font-extrabold flex items-center justify-center text-xs shrink-0">
+                        {session.patientName.split(" ").map((n: string) => n[0]).join("")}
+                      </div>
+                      <div>
+                        <p className="font-bold text-xs text-foreground leading-tight">{session.patientName}</p>
+                        <p className="text-[11px] text-muted-foreground">{session.age} yrs · {session.gender} · #{session.id}</p>
+                      </div>
+                    </div>
+                    {getStatusBadge(session.status)}
+                  </div>
+                  
+                  <div className="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t border-border/40">
+                    <div className="flex items-center gap-1 font-semibold text-foreground">
+                      <Clock className="h-3.5 w-3.5 text-primary" />
+                      <span>{session.time}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      {session.mode === "Video Call" ? (
+                        <Video className="h-3.5 w-3.5 text-primary" />
+                      ) : (
+                        <Stethoscope className="h-3.5 w-3.5 text-emerald-600" />
+                      )}
+                      <span className="font-medium">{session.mode}</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground font-medium">Focus: {session.type}</p>
+
+                  <Button size="sm" asChild variant={session.status === "In Consultation" || session.status === "Waiting" ? "default" : "outline"} className="w-full h-9 text-xs font-semibold">
+                    <Link href={`/doctor/consultation?id=${session.id}`}>
+                      {session.status === "Completed" ? "View Notes" : "Start Consultation"}
+                    </Link>
+                  </Button>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View (>= 768px) */}
             <div className="hidden md:block overflow-x-auto">
               <Table>
                 <TableHeader>

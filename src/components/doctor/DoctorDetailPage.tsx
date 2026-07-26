@@ -141,19 +141,19 @@ export const DoctorDetailPage: React.FC<DoctorDetailPageProps> = ({ pageKey }) =
                 { time: "11:00 AM", patient: "Meera Verma", type: "Preventive Health Check", mode: "Telehealth", status: "Scheduled" },
                 { time: "11:30 AM", patient: "Siddharth Malhotra", type: "Chronic Fatigue Evaluation", mode: "In-Clinic", status: "Completed" },
               ].map((item, index) => (
-                <div key={index} className="flex items-center justify-between p-3.5 rounded-xl border border-border/60 bg-background hover:border-primary/40 transition">
+                <div key={index} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 rounded-xl border border-border/60 bg-background hover:border-primary/40 transition gap-3">
                   <div className="flex items-center gap-4">
-                    <span className="text-xs font-bold text-primary w-20">{item.time}</span>
+                    <span className="text-xs font-bold text-primary w-20 shrink-0">{item.time}</span>
                     <div>
                       <p className="text-sm font-bold text-foreground">{item.patient}</p>
                       <p className="text-xs text-muted-foreground">{item.type} · {item.mode}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-0 border-border/40">
                     <Badge variant="outline" className={item.status === "In Progress" ? "bg-purple-500/10 text-purple-600 border-purple-500/20" : item.status === "Waiting" ? "bg-amber-500/10 text-amber-600 border-amber-500/20" : "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"}>
                       {item.status}
                     </Badge>
-                    <Button size="sm" className="h-8 text-xs">Start Session</Button>
+                    <Button size="sm" className="w-full sm:w-auto h-8 text-xs">Start Session</Button>
                   </div>
                 </div>
               ))}
@@ -170,22 +170,22 @@ export const DoctorDetailPage: React.FC<DoctorDetailPageProps> = ({ pageKey }) =
               <h1 className="text-2xl font-bold text-foreground">Appointments Pipeline</h1>
               <p className="text-xs text-muted-foreground">Filter, schedule, and review patient consultation bookings</p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
               <Input
                 placeholder="Search patient name or ID..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-64 text-xs h-9"
+                className="w-full sm:w-64 text-xs h-9"
               />
-              <Button size="sm" className="h-9 text-xs"><Plus className="h-3.5 w-3.5 mr-1" /> New Booking</Button>
+              <Button size="sm" className="h-9 text-xs w-full sm:w-auto"><Plus className="h-3.5 w-3.5 mr-1" /> New Booking</Button>
             </div>
           </div>
 
           <Card className="surface-panel">
             <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <CardTitle className="text-base font-bold">Upcoming & Past Appointments</CardTitle>
-                <div className="flex items-center gap-1.5 bg-muted p-1 rounded-lg">
+                <div className="flex flex-wrap items-center gap-1.5 bg-muted p-1 rounded-lg">
                   {["all", "confirmed", "telehealth", "completed"].map((tab) => (
                     <button
                       key={tab}
@@ -198,7 +198,7 @@ export const DoctorDetailPage: React.FC<DoctorDetailPageProps> = ({ pageKey }) =
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>

@@ -132,7 +132,7 @@ const PatientDashboardPage = () => {
               </p>
             </div>
           </div>
-          <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold px-4 shrink-0 shadow">
+          <Button size="sm" className="w-full sm:w-auto bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold px-4 shrink-0 shadow">
             Join Call Room
           </Button>
         </div>
@@ -148,7 +148,7 @@ const PatientDashboardPage = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-transparent" />
 
-        <div className="relative z-10 p-6 md:p-8 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-center">
+        <div className="relative z-10 p-5 md:p-8 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-center">
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
               <Badge className="bg-primary/15 text-primary border-primary/20 hover:bg-primary/20 px-3 py-1 text-xs font-bold uppercase tracking-wider">
@@ -162,7 +162,7 @@ const PatientDashboardPage = () => {
             </div>
 
             <div>
-              <h1 className="text-2xl md:text-3xl font-extrabold text-foreground tracking-tight">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-foreground tracking-tight">
                 Welcome back, {userName}
               </h1>
               <p className="max-w-xl text-xs md:text-sm text-muted-foreground leading-relaxed mt-1">
@@ -171,7 +171,7 @@ const PatientDashboardPage = () => {
             </div>
           </div>
 
-          <div className="flex flex-wrap sm:flex-nowrap gap-3 shrink-0">
+          <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto shrink-0">
             <Button variant="outline" asChild className="w-full sm:w-auto shadow-sm hover:shadow-md transition">
               <Link href="/patient/bookings">
                 <CalendarClock className="h-4 w-4 mr-2 text-primary" />

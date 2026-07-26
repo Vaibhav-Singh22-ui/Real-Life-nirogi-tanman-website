@@ -188,7 +188,7 @@ const YogaDashboardPage = () => {
             </div>
           </div>
 
-          <div className="flex flex-wrap sm:flex-nowrap gap-3 shrink-0">
+          <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto shrink-0">
             <Button variant="outline" asChild className="w-full sm:w-auto shadow-sm hover:shadow-md transition">
               <Link href="/yoga/exercise-library">
                 <Activity className="h-4 w-4 mr-2 text-emerald-600" />
@@ -224,7 +224,7 @@ const YogaDashboardPage = () => {
       {/* Main Content Grid */}
       <section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.4fr_0.6fr]">
         <Card className="surface-panel shadow-lg border-border/80">
-          <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-border/40">
+          <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border/40">
             <div>
               <CardTitle className="text-lg font-bold flex items-center gap-2">
                 <Waves className="h-5 w-5 text-emerald-600" />
@@ -232,7 +232,7 @@ const YogaDashboardPage = () => {
               </CardTitle>
               <CardDescription className="text-xs">Therapeutic classes & student check-ins for {instructorName}</CardDescription>
             </div>
-            <Button size="sm" asChild variant="ghost" className="hover:bg-emerald-500/10 hover:text-emerald-600">
+            <Button size="sm" asChild variant="ghost" className="hover:bg-emerald-500/10 hover:text-emerald-600 self-start sm:self-auto">
               <Link href="/yoga/calendar" className="text-emerald-600 text-xs font-semibold flex items-center gap-1">
                 View Studio Calendar
                 <ArrowUpRight className="h-3.5 w-3.5" />
@@ -240,6 +240,39 @@ const YogaDashboardPage = () => {
             </Button>
           </CardHeader>
           <CardContent className="pt-4">
+            {/* Mobile Card List (< 768px) */}
+            <div className="block md:hidden space-y-3">
+              {sessions.map((session) => (
+                <div key={session.id} className="p-3.5 rounded-xl border border-border bg-card space-y-3 shadow-sm">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <div className="h-9 w-9 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-extrabold flex items-center justify-center text-xs shrink-0">
+                        {session.participant.split(" ").map((n: string) => n[0]).join("")}
+                      </div>
+                      <div>
+                        <p className="font-bold text-xs text-foreground leading-tight">{session.participant}</p>
+                        <p className="text-[11px] text-muted-foreground">{session.age} yrs · #{session.id}</p>
+                      </div>
+                    </div>
+                    {getStatusBadge(session.status)}
+                  </div>
+                  
+                  <div className="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t border-border/40">
+                    <span className="font-bold text-foreground">{session.time}</span>
+                    <span className="font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">{session.type}</span>
+                  </div>
+                  <p className="text-xs font-medium text-muted-foreground">Routine: {session.routine}</p>
+
+                  <Button size="sm" asChild variant={session.status === "Checked in" ? "default" : "outline"} className={`w-full h-9 text-xs font-semibold ${session.status === "Checked in" ? "bg-emerald-600 hover:bg-emerald-700 text-white" : ""}`}>
+                    <Link href={`/yoga/attendance?id=${session.id}`}>
+                      {session.status === "Attended" || session.status === "Completed" ? "Feedback" : "Join Session"}
+                    </Link>
+                  </Button>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View (>= 768px) */}
             <div className="hidden md:block overflow-x-auto">
               <Table>
                 <TableHeader>

@@ -130,9 +130,9 @@ const PatientBookingsPage = () => {
                     <span>Ref: {booking.id}</span>
                   </div>
                 </div>
-                <div className="flex flex-wrap justify-start gap-2 md:justify-end">
-                  <Button size="sm" variant="outline">Reschedule</Button>
-                  <Button size="sm" variant="destructive">Cancel</Button>
+                <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto shrink-0 pt-2 md:pt-0 border-t md:border-0 border-border/40">
+                  <Button size="sm" variant="outline" className="w-full sm:w-auto text-xs">Reschedule</Button>
+                  <Button size="sm" variant="destructive" className="w-full sm:w-auto text-xs">Cancel</Button>
                 </div>
               </div>
             ))}
