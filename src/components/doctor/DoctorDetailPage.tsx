@@ -30,6 +30,7 @@ import {
   Filter,
   Sparkles,
   Phone,
+  PhoneOff,
   Mail,
   AlertTriangle,
   ChevronRight,
@@ -538,8 +539,346 @@ export const DoctorDetailPage: React.FC<DoctorDetailPageProps> = ({ pageKey }) =
         </div>
       );
 
+    case "patient-queue":
+      return (
+        <div className="space-y-6 font-['Manrope',sans-serif]">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">OPD & Telehealth Patient Triage Queue</h1>
+              <p className="text-xs text-muted-foreground">Real-time checked-in patients awaiting clinical consultation</p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              <Button onClick={() => toast.success("Calling Next Patient: Aisha Mehta to Consultation Room #2")} className="bg-primary text-primary-foreground text-xs h-9 font-bold">
+                <Phone className="h-3.5 w-3.5 mr-1.5" /> Call Next Patient
+              </Button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="surface-panel p-4 flex items-center justify-between">
+              <div>
+                <p className="text-xs text-muted-foreground">Waiting Room Total</p>
+                <p className="text-2xl font-extrabold text-foreground">8 Patients</p>
+              </div>
+              <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 text-xs">Avg Wait: 14m</Badge>
+            </Card>
+            <Card className="surface-panel p-4 flex items-center justify-between">
+              <div>
+                <p className="text-xs text-muted-foreground">In Consultation</p>
+                <p className="text-2xl font-extrabold text-foreground">2 Sessions</p>
+              </div>
+              <Badge className="bg-purple-500/10 text-purple-600 border-purple-500/20 text-xs">Active Desk</Badge>
+            </Card>
+            <Card className="surface-panel p-4 flex items-center justify-between">
+              <div>
+                <p className="text-xs text-muted-foreground">Completed Today</p>
+                <p className="text-2xl font-extrabold text-foreground">12 OPD Patients</p>
+              </div>
+              <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 text-xs">96% On Time</Badge>
+            </Card>
+          </div>
+
+          <Card className="surface-panel">
+            <CardHeader className="pb-3 border-b border-border/40">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <CardTitle className="text-base font-bold">Live Checked-In Queue Roster</CardTitle>
+                <div className="relative w-full sm:w-64">
+                  <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+                  <Input
+                    placeholder="Filter queue by patient name..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-8 text-xs h-8"
+                  />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-4 space-y-3">
+              {[
+                { queueNo: "Q-01", name: "Aisha Mehta", age: "34/F", time: "09:30 AM", status: "In Consultation", mode: "In-Clinic", priority: "Normal" },
+                { queueNo: "Q-02", name: "Rohan Bhatia", age: "45/M", time: "10:00 AM", status: "Waiting", mode: "Telehealth", priority: "High" },
+                { queueNo: "Q-03", name: "Karan Sharma", age: "29/M", time: "10:30 AM", status: "Checked In", mode: "In-Clinic", priority: "Normal" },
+                { queueNo: "Q-04", name: "Meera Verma", age: "52/F", time: "11:00 AM", status: "Checked In", mode: "Telehealth", priority: "Normal" },
+              ].filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase())).map((item) => (
+                <div key={item.queueNo} className="p-4 rounded-xl border border-border/60 bg-background flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm hover:border-primary/40 transition">
+                  <div className="flex items-center gap-3">
+                    <span className="font-extrabold text-xs text-primary bg-primary/10 px-2.5 py-1 rounded-lg shrink-0">{item.queueNo}</span>
+                    <div>
+                      <p className="font-extrabold text-sm text-foreground">{item.name} <span className="text-xs text-muted-foreground font-normal">({item.age})</span></p>
+                      <p className="text-xs text-muted-foreground">Scheduled: {item.time} · Mode: {item.mode}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 justify-end w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-0 border-border/40">
+                    <Badge variant="outline" className={item.priority === "High" ? "bg-rose-500/10 text-rose-600 border-rose-500/20 text-xs" : "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 text-xs"}>
+                      {item.priority} Priority
+                    </Badge>
+                    <Button size="sm" onClick={() => toast.success(`Started consultation for ${item.name}`)} className="h-8 text-xs font-bold">
+                      Start Consult
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      );
+
+    case "consultation":
+    case "video-call":
+      return (
+        <div className="space-y-6 font-['Manrope',sans-serif]">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">Active Telehealth & Clinical Consultation Suite</h1>
+              <p className="text-xs text-muted-foreground">Live HD video stream, digital stethoscope & real-time clinical notes</p>
+            </div>
+            <Badge className="bg-emerald-500/15 text-emerald-600 border-emerald-500/20 text-xs px-3 py-1 font-bold animate-pulse">
+              <Video className="h-3.5 w-3.5 mr-1" /> Session Live: 14m 22s
+            </Badge>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_0.6fr] gap-6">
+            <Card className="surface-panel overflow-hidden border-border/80 shadow-lg flex flex-col justify-between">
+              <div className="relative aspect-video bg-slate-900 rounded-t-xl overflow-hidden flex items-center justify-center">
+                <img
+                  src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1200&auto=format&fit=crop"
+                  alt="Patient Video Telehealth Stream"
+                  className="absolute inset-0 w-full h-full object-cover opacity-80"
+                />
+                <div className="absolute top-3 left-3 bg-background/80 backdrop-blur-md px-3 py-1 rounded-lg text-xs font-bold text-foreground flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+                  Aisha Mehta (#P-8821)
+                </div>
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-background/90 backdrop-blur-md p-2 rounded-2xl border border-border shadow-xl">
+                  <Button size="icon" variant="outline" onClick={() => toast.info("Microphone toggled")} className="h-10 w-10 rounded-xl">
+                    <Phone className="h-4 w-4" />
+                  </Button>
+                  <Button size="icon" variant="outline" onClick={() => toast.info("Video camera toggled")} className="h-10 w-10 rounded-xl">
+                    <Video className="h-4 w-4" />
+                  </Button>
+                  <Button size="icon" variant="destructive" onClick={() => toast.success("Consultation session ended and archived.")} className="h-10 w-10 rounded-xl font-bold">
+                    <PhoneOff className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+              <CardContent className="pt-4 space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-muted-foreground">Network Latency: <strong className="text-emerald-600">18ms (Optimal)</strong></span>
+                  <span className="font-semibold text-muted-foreground">Audio Stream: <strong className="text-foreground">Encrypted WebRTC</strong></span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="surface-panel shadow-md p-5 space-y-4">
+              <h3 className="text-base font-bold text-foreground flex items-center gap-2 border-b border-border/40 pb-3">
+                <FileText className="h-4 w-4 text-primary" /> Live Clinical Notes & Observation
+              </h3>
+              <div className="space-y-3 text-xs">
+                <div className="space-y-1">
+                  <Label className="text-xs font-bold">Subjective Symptoms</Label>
+                  <Input placeholder="Patient complains of evening fatigue and restless sleep..." className="text-xs h-9" />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs font-bold">Objective Vitals Telemetry</Label>
+                  <Input placeholder="BP: 122/78 mmHg | HR: 74 bpm | Temp: 98.4 F" className="text-xs h-9" />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs font-bold">Ayurvedic Samprapti & Assessment</Label>
+                  <Input placeholder="Vata aggravation in Manovaha Srotas with mild Agni Mandya" className="text-xs h-9" />
+                </div>
+                <Button onClick={() => toast.success("Clinical note saved to patient record!")} className="w-full text-xs font-bold h-9 mt-2">
+                  Save Clinical Note
+                </Button>
+              </div>
+            </Card>
+          </div>
+        </div>
+      );
+
+    case "medical-notes":
+      return (
+        <div className="space-y-6 font-['Manrope',sans-serif]">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">Clinical SOAP Notes Editor</h1>
+              <p className="text-xs text-muted-foreground">Structured clinical documentation (Subjective, Objective, Assessment, Plan)</p>
+            </div>
+            <Button onClick={() => toast.success("SOAP note compiled & attached to patient EHR!")} className="bg-primary text-primary-foreground text-xs h-9 font-bold">
+              <FileCheck className="h-3.5 w-3.5 mr-1.5" /> Save & Sign SOAP Note
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="surface-panel p-5 space-y-3">
+              <Label className="text-xs font-bold text-primary uppercase tracking-wider">Subjective (S)</Label>
+              <textarea
+                placeholder="Patient history, chief complaint, symptom onset, and subjective severity ratings..."
+                className="w-full h-32 p-3 text-xs rounded-xl border border-input bg-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+              />
+            </Card>
+            <Card className="surface-panel p-5 space-y-3">
+              <Label className="text-xs font-bold text-primary uppercase tracking-wider">Objective (O)</Label>
+              <textarea
+                placeholder="Physical examination findings, vital signs telemetry, diagnostic lab markers..."
+                className="w-full h-32 p-3 text-xs rounded-xl border border-input bg-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+              />
+            </Card>
+            <Card className="surface-panel p-5 space-y-3">
+              <Label className="text-xs font-bold text-primary uppercase tracking-wider">Assessment (A)</Label>
+              <textarea
+                placeholder="Differential diagnoses, ICD-10 coding, Ayurvedic Dosha imbalance evaluation..."
+                className="w-full h-32 p-3 text-xs rounded-xl border border-input bg-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+              />
+            </Card>
+            <Card className="surface-panel p-5 space-y-3">
+              <Label className="text-xs font-bold text-primary uppercase tracking-wider">Plan (P)</Label>
+              <textarea
+                placeholder="Prescription regimen, follow-up timeline, dietary modifications, diagnostic orders..."
+                className="w-full h-32 p-3 text-xs rounded-xl border border-input bg-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+              />
+            </Card>
+          </div>
+        </div>
+      );
+
+    case "reports":
+      return (
+        <div className="space-y-6 font-['Manrope',sans-serif]">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">Diagnostic Lab Reports & Scans Desk</h1>
+              <p className="text-xs text-muted-foreground">Review, verify, and approve diagnostic findings submitted by lab portals</p>
+            </div>
+            <Button onClick={() => toast.success("Lab report batch approved & attached to patient profile.")} className="bg-primary text-primary-foreground text-xs h-9 font-bold">
+              <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" /> Approve Batch
+            </Button>
+          </div>
+
+          <Card className="surface-panel">
+            <CardHeader className="pb-3 border-b border-border/40">
+              <CardTitle className="text-base font-bold">Pending Diagnostic Review Queue</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4 space-y-3">
+              {[
+                { name: "Aisha Mehta", doc: "Cortisol Diurnal Rhythm Panel", date: "Jul 22, 2026", status: "Flagged High", size: "1.4 MB" },
+                { name: "Rohan Bhatia", doc: "Polysomnography Sleep Study", date: "Jul 20, 2026", status: "Normal", size: "4.8 MB" },
+                { name: "Karan Sharma", doc: "Lipid Profile & HbA1c", date: "Jul 18, 2026", status: "Normal", size: "920 KB" },
+              ].map((item, idx) => (
+                <div key={idx} className="p-4 rounded-xl border border-border/60 bg-background flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm hover:border-primary/40 transition">
+                  <div className="flex items-center gap-3">
+                    <FileText className="h-8 w-8 text-primary shrink-0" />
+                    <div>
+                      <p className="font-extrabold text-xs text-foreground">{item.doc}</p>
+                      <p className="text-[11px] text-muted-foreground">Patient: {item.name} · Date: {item.date} ({item.size})</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 justify-end w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-0 border-border/40">
+                    <Badge variant="outline" className={item.status.includes("High") ? "bg-rose-500/10 text-rose-600 border-rose-500/20 text-xs" : "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 text-xs"}>
+                      {item.status}
+                    </Badge>
+                    <Button size="sm" variant="outline" onClick={() => toast.success(`Downloading PDF for ${item.doc}`)} className="h-8 text-xs font-bold">
+                      <Download className="h-3.5 w-3.5 mr-1" /> PDF
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      );
+
+    case "availability":
+      return (
+        <div className="space-y-6 font-['Manrope',sans-serif]">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">OPD & Telehealth Slot Manager</h1>
+              <p className="text-xs text-muted-foreground">Configure weekly consultation working hours and video call slots</p>
+            </div>
+            <Button onClick={() => toast.success("Working schedule & consultation slots updated!")} className="bg-primary text-primary-foreground text-xs h-9 font-bold">
+              <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" /> Save Weekly Schedule
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="surface-panel p-5 space-y-4">
+              <h3 className="text-base font-bold text-foreground flex items-center gap-2 border-b border-border/40 pb-3">
+                <Clock className="h-5 w-5 text-primary" /> Shift Hours & Slot Timings
+              </h3>
+              <div className="space-y-3 text-xs">
+                <div className="space-y-1">
+                  <Label className="text-xs font-bold">Morning OPD Shift</Label>
+                  <Input defaultValue="09:00 AM - 01:30 PM" className="text-xs h-9" />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs font-bold">Afternoon Telehealth Shift</Label>
+                  <Input defaultValue="02:30 PM - 05:00 PM" className="text-xs h-9" />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs font-bold">Consultation Slot Duration</Label>
+                  <Input defaultValue="20 Minutes per patient" className="text-xs h-9" />
+                </div>
+              </div>
+            </Card>
+
+            <Card className="surface-panel p-5 space-y-4">
+              <h3 className="text-base font-bold text-foreground flex items-center gap-2 border-b border-border/40 pb-3">
+                <Calendar className="h-5 w-5 text-primary" /> Active Working Days
+              </h3>
+              <div className="space-y-2.5">
+                {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day) => (
+                  <div key={day} className="flex items-center justify-between p-2.5 rounded-lg border border-border/60 bg-background text-xs font-bold">
+                    <span>{day}</span>
+                    <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 text-xs">Active Shifts</Badge>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </div>
+        </div>
+      );
+
+    case "analytics":
+    case "medical-history":
+      return (
+        <div className="space-y-6 font-['Manrope',sans-serif]">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">Clinical Performance & Longitudinal Analytics</h1>
+              <p className="text-xs text-muted-foreground">Practice metrics, patient compliance, and diagnostic recovery rates</p>
+            </div>
+            <Button onClick={() => toast.success("Analytics report downloaded.")} className="bg-primary text-primary-foreground text-xs h-9 font-bold">
+              <Download className="h-3.5 w-3.5 mr-1.5" /> Download Analytics PDF
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <Card className="surface-panel p-4 space-y-1">
+              <p className="text-xs text-muted-foreground">Total Consultations</p>
+              <p className="text-2xl font-extrabold text-foreground">348 Sessions</p>
+              <p className="text-[11px] text-emerald-600 font-semibold">+14% vs last month</p>
+            </Card>
+            <Card className="surface-panel p-4 space-y-1">
+              <p className="text-xs text-muted-foreground">Patient Satisfaction</p>
+              <p className="text-2xl font-extrabold text-foreground">4.9 / 5.0</p>
+              <p className="text-[11px] text-emerald-600 font-semibold">98% positive reviews</p>
+            </Card>
+            <Card className="surface-panel p-4 space-y-1">
+              <p className="text-xs text-muted-foreground">Rx Adherence Rate</p>
+              <p className="text-2xl font-extrabold text-foreground">91%</p>
+              <p className="text-[11px] text-emerald-600 font-semibold">Optimal compliance</p>
+            </Card>
+            <Card className="surface-panel p-4 space-y-1">
+              <p className="text-xs text-muted-foreground">Avg Resolution Time</p>
+              <p className="text-2xl font-extrabold text-foreground">18 Days</p>
+              <p className="text-[11px] text-emerald-600 font-semibold">-3 days recovery</p>
+            </Card>
+          </div>
+        </div>
+      );
+
     case "notifications":
-      return <SharedNotificationsView roleLabel="Doctor" />;
+      return <SharedNotificationsView />;
 
     case "settings":
       return <SharedSettingsView roleLabel="Doctor" />;

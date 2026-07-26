@@ -298,8 +298,133 @@ export const YogaDetailPage: React.FC<YogaDetailPageProps> = ({ pageKey }) => {
         </div>
       );
 
+    case "calendar":
+      return (
+        <div className="space-y-6 font-['Manrope',sans-serif]">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">Yoga Studio & Therapy Schedule</h1>
+              <p className="text-xs text-muted-foreground">Manage group classes, 1-on-1 therapeutic consultations & workshops</p>
+            </div>
+            <Button onClick={() => toast.success("Opened Schedule New Class modal")} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-9 font-bold">
+              <Plus className="h-3.5 w-3.5 mr-1.5" /> Schedule Studio Class
+            </Button>
+          </div>
+
+          <Card className="surface-panel p-5 space-y-4">
+            <div className="flex items-center justify-between border-b border-border/40 pb-3">
+              <h3 className="text-base font-bold text-foreground flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-emerald-600" /> Today's Studio Calendar
+              </h3>
+              <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 text-xs">5 Sessions Scheduled</Badge>
+            </div>
+
+            <div className="space-y-3">
+              {[
+                { time: "07:00 AM", title: "Morning Sun Salutations & Breathwork", type: "Group Class", location: "Studio Room A", enrolled: "12 Students" },
+                { time: "09:30 AM", title: "Spine Decompression Therapy (Aisha Mehta)", type: "1-on-1 Therapy", location: "Therapy Pod 2", enrolled: "1 Patient" },
+                { time: "04:30 PM", title: "Metabolic Activation Flow", type: "Group Class", location: "Studio Room B", enrolled: "8 Students" },
+                { time: "07:00 PM", title: "Restorative Yoga Nidra & Sound Bath", type: "Special Workshop", location: "Main Hall", enrolled: "20 Students" },
+              ].map((item, idx) => (
+                <div key={idx} className="p-4 rounded-xl border border-border/60 bg-background flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm hover:border-emerald-500/40 transition">
+                  <div className="flex items-center gap-4">
+                    <span className="font-extrabold text-xs text-emerald-600 bg-emerald-500/10 px-2.5 py-1.5 rounded-lg shrink-0">{item.time}</span>
+                    <div>
+                      <p className="font-bold text-sm text-foreground">{item.title}</p>
+                      <p className="text-xs text-muted-foreground">{item.type} · {item.location} ({item.enrolled})</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-0 border-border/40">
+                    <Button size="sm" onClick={() => toast.success(`Started session: ${item.title}`)} className="h-8 text-xs bg-emerald-600 text-white font-bold">
+                      Launch Class
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+      );
+
+    case "attendance":
+      return (
+        <div className="space-y-6 font-['Manrope',sans-serif]">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">Student & Patient Attendance Roster</h1>
+              <p className="text-xs text-muted-foreground">Track participation, mark attendance, and review consistency trends</p>
+            </div>
+            <Button onClick={() => toast.success("Attendance sheet synced to patient records!")} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-9 font-bold">
+              <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" /> Save Attendance Log
+            </Button>
+          </div>
+
+          <Card className="surface-panel">
+            <CardHeader className="pb-3 border-b border-border/40">
+              <CardTitle className="text-base font-bold">Today's Class Attendance List</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4 space-y-3">
+              {[
+                { name: "Aisha Mehta", program: "Spine Mobility Protocol", status: "Present", rate: "92%" },
+                { name: "Rohan Bhatia", program: "Stress & Anxiety Relief", status: "Present", rate: "88%" },
+                { name: "Karan Sharma", program: "Metabolic Wellness Flow", status: "Absent", rate: "75%" },
+                { name: "Meera Verma", program: "Senior Joint Health", status: "Present", rate: "95%" },
+              ].map((student, idx) => (
+                <div key={idx} className="p-3.5 rounded-xl border border-border/60 bg-background flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <p className="font-bold text-sm text-foreground">{student.name}</p>
+                    <p className="text-xs text-muted-foreground">{student.program} · Attendance Rate: <strong className="text-emerald-600">{student.rate}</strong></p>
+                  </div>
+                  <div className="flex items-center justify-end gap-2">
+                    <Badge className={student.status === "Present" ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 text-xs" : "bg-rose-500/10 text-rose-600 border-rose-500/20 text-xs"}>
+                      {student.status}
+                    </Badge>
+                    <Button size="sm" variant="outline" onClick={() => toast.info(`Toggled attendance for ${student.name}`)} className="h-7 text-xs">
+                      Toggle Status
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      );
+
+    case "progress":
+      return (
+        <div className="space-y-6 font-['Manrope',sans-serif]">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">Range-of-Motion & Posture Progress</h1>
+              <p className="text-xs text-muted-foreground">Longitudinal flexibility telemetry, goniometer readings & posture alignment scores</p>
+            </div>
+            <Button onClick={() => toast.success("Added new ROM evaluation reading!")} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-9 font-bold">
+              <Plus className="h-3.5 w-3.5 mr-1.5" /> Log New ROM Metric
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <Card className="surface-panel p-4 space-y-1">
+              <p className="text-xs text-muted-foreground">Avg Hamstring Flexion</p>
+              <p className="text-2xl font-extrabold text-foreground">78 Degrees</p>
+              <p className="text-[11px] text-emerald-600 font-semibold">+12 deg improvement</p>
+            </Card>
+            <Card className="surface-panel p-4 space-y-1">
+              <p className="text-xs text-muted-foreground">Spinal Extension Score</p>
+              <p className="text-2xl font-extrabold text-foreground">8.4 / 10</p>
+              <p className="text-[11px] text-emerald-600 font-semibold">Optimal posture</p>
+            </Card>
+            <Card className="surface-panel p-4 space-y-1">
+              <p className="text-xs text-muted-foreground">Breath Capacity (Sama Vritta)</p>
+              <p className="text-2xl font-extrabold text-foreground">14 Seconds</p>
+              <p className="text-[11px] text-emerald-600 font-semibold">+4s retention</p>
+            </Card>
+          </div>
+        </div>
+      );
+
     case "notifications":
-      return <SharedNotificationsView roleLabel="Yoga Instructor" />;
+      return <SharedNotificationsView />;
 
     case "settings":
       return <SharedSettingsView roleLabel="Yoga Instructor" />;

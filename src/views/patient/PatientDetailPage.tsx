@@ -56,7 +56,7 @@ const defaultProfile = {
 };
 
 const PatientDetailPage = ({ pageKey }: PatientDetailPageProps) => {
-  const page = patientPages[pageKey];
+  const page = patientPages[pageKey] || patientPages["ai-assistant"];
   const { user, profile: authProfile, refreshProfile } = useAuth();
 
   // Profile-specific state
@@ -518,7 +518,7 @@ const PatientDetailPage = ({ pageKey }: PatientDetailPageProps) => {
     return <PrescriptionsView />;
   }
 
-  if (pageKey === "blood-pressure" || pageKey === "blood-sugar") {
+  if ((pageKey as string) === "blood-pressure" || (pageKey as string) === "blood-sugar" || (pageKey as string) === "vitals-tracker" || (pageKey as string) === "weight") {
     return <VitalsTrackerView />;
   }
 
