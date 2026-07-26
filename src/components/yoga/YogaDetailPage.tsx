@@ -236,7 +236,7 @@ export const YogaDetailPage: React.FC<YogaDetailPageProps> = ({ pageKey }) => {
               { name: "Anulom Vilom (Nadi Shodhana)", target: "Autonomic Nervous Balance", level: "All Levels", img: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=400&auto=format&fit=crop" },
               { name: "Setu Bandhasana (Bridge Pose)", target: "Glute Activation & Cervical Support", level: "Beginner", img: "https://images.unsplash.com/photo-1599447421416-3414500d18a5?q=80&w=400&auto=format&fit=crop" },
               { name: "Vrikshasana (Tree Pose)", target: "Proprioception & Ankle Stability", level: "Beginner", img: "https://images.unsplash.com/photo-1510894347713-da3ed8f6f43d?q=80&w=400&auto=format&fit=crop" },
-              { name: "Yoga Nidra (Guided Sleep Flow)", target: "Deep Parasympathetic Recovery", level: "Restorative", img: "https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=400&auto=format&fit=crop" },
+              { name: "Yoga Nidra (Guided Sleep Flow)", target: "Deep Parasympathetic Recovery", level: "Restorative", img: "/articles/yoga_nidra.png" },
             ].map((asana, index) => (
               <Card key={index} className="surface-panel overflow-hidden group hover:shadow-xl transition-all duration-300">
                 <div className="h-40 w-full overflow-hidden relative">

@@ -303,7 +303,11 @@ const ArticlesPage = () => {
 
             <div className="space-y-6 pt-4">
               <div className="relative h-64 sm:h-80 w-full rounded-2xl overflow-hidden bg-muted">
-                <img src={activeArticle.image} alt={activeArticle.title} className="w-full h-full object-cover" />
+                <img
+                  src={activeArticle.image || "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=800&auto=format&fit=crop"}
+                  alt={activeArticle.title}
+                  className="w-full h-full object-cover"
+                />
               </div>
 
               <div className="prose prose-emerald max-w-none space-y-4 text-xs sm:text-sm text-muted-foreground leading-relaxed font-normal">
@@ -311,11 +315,17 @@ const ArticlesPage = () => {
                   {activeArticle.excerpt}
                 </p>
 
-                <p>
-                  Comprehensive health recovery requires evaluating root metabolic triggers alongside structural body alignment. In clinical practice, integrating targeted Ayurvedic herbal formulations with daily functional movement has consistently shown accelerated recovery markers across patient cohorts.
-                </p>
+                {activeArticle.content ? (
+                  <div className="whitespace-pre-line text-foreground text-xs sm:text-sm leading-relaxed">
+                    {activeArticle.content}
+                  </div>
+                ) : (
+                  <p>
+                    Comprehensive health recovery requires evaluating root metabolic triggers alongside structural body alignment. In clinical practice, integrating targeted Ayurvedic herbal formulations with daily functional movement has consistently shown accelerated recovery markers across patient cohorts.
+                  </p>
+                )}
 
-                <div className="p-4 rounded-2xl bg-[#F8FAF7] border border-primary/20 space-y-2">
+                <div className="p-4 rounded-2xl bg-[#F8FAF7] border border-primary/20 space-y-2 mt-4">
                   <h5 className="font-bold text-xs text-primary uppercase tracking-wider flex items-center gap-1.5">
                     <Sparkles className="h-4 w-4" /> Key Clinical Takeaways
                   </h5>
@@ -335,19 +345,19 @@ const ArticlesPage = () => {
                   </ul>
                 </div>
 
-                <p>
+                <p className="mt-4">
                   For personalized advice tailored to your metabolic dosha index or chronic symptoms, consult directly with our verified Ayurvedic doctors and yoga specialists via the Nirogi Tanman patient portal.
                 </p>
               </div>
 
               <div className="pt-6 border-t border-border flex items-center justify-between flex-wrap gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-[#2F5E1A] text-white flex items-center justify-center font-black text-sm">
+                  <div className="h-10 w-10 rounded-full bg-[#2F5E1A] text-white flex items-center justify-center font-black text-xs">
                     NT
                   </div>
                   <div>
-                    <h5 className="text-xs font-bold text-foreground">Authored by Nirogi Tanman Clinical Board</h5>
-                    <p className="text-[10px] text-muted-foreground">Reviewed for medical accuracy by Dr. Vikram Seth</p>
+                    <h5 className="text-xs font-bold text-foreground">{activeArticle.author || "Authored by Nirogi Tanman Clinical Board"}</h5>
+                    <p className="text-[10px] text-muted-foreground">Reviewed for medical accuracy by Nirogi Medical Board</p>
                   </div>
                 </div>
 
