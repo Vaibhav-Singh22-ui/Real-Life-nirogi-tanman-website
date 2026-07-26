@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
+import { Loader2, LogIn, CheckCircle2 } from "lucide-react";
 import AuthFormShell from "@/components/auth/AuthFormShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -118,7 +119,27 @@ const LoginPage = () => {
           <Link href="/forgot-password" className="text-primary">Forgot password?</Link>
           <Link href="/otp-verification" className="text-muted-foreground">Use OTP</Link>
         </div>
-        <Button type="submit" className="w-full" disabled={isSubmitting}>Sign In</Button>
+        <Button
+          type="submit"
+          className={`w-full h-11 text-xs font-extrabold uppercase tracking-wider rounded-xl transition-all duration-300 shadow-md ${
+            isSubmitting
+              ? "bg-gradient-to-r from-emerald-600 via-primary to-teal-700 text-white shadow-emerald-500/30 animate-pulse scale-[0.99]"
+              : "bg-primary hover:bg-primary/95 text-primary-foreground hover:shadow-lg"
+          }`}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <span className="flex items-center justify-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin text-white" />
+              <span>Signing In & Accessing Portal...</span>
+            </span>
+          ) : (
+            <span className="flex items-center justify-center gap-2">
+              <LogIn className="h-4 w-4" />
+              <span>Sign In</span>
+            </span>
+          )}
+        </Button>
         {errors.root && <p className="text-xs status-error">{errors.root.message}</p>}
       </form>
     </AuthFormShell>

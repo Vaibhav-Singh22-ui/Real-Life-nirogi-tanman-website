@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2, LogIn, UserPlus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -167,9 +167,23 @@ const Auth = () => {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full rounded-full text-[11px] uppercase tracking-wider font-normal"
+            className={`w-full rounded-full text-[11px] uppercase tracking-wider font-extrabold transition-all duration-300 ${
+              loading
+                ? "bg-gradient-to-r from-emerald-600 via-primary to-teal-700 text-white shadow-lg animate-pulse scale-[0.99]"
+                : "bg-primary hover:bg-primary/95 text-primary-foreground shadow-md hover:shadow-lg"
+            }`}
           >
-            {loading ? "Please wait..." : isLogin ? "Sign In" : "Create Account"}
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin text-white" />
+                <span>{isLogin ? "Signing In..." : "Creating Account..."}</span>
+              </span>
+            ) : (
+              <span className="flex items-center justify-center gap-2">
+                {isLogin ? <LogIn className="h-3.5 w-3.5" /> : <UserPlus className="h-3.5 w-3.5" />}
+                <span>{isLogin ? "Sign In" : "Create Account"}</span>
+              </span>
+            )}
           </Button>
         </form>
 

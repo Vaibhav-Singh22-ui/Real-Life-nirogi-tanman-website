@@ -580,36 +580,46 @@ const HomePage = () => {
                 <circle cx="120" cy="120" r="75" fill="none" stroke="currentColor" className="text-primary/15" strokeWidth="2.5" />
                 <circle cx="120" cy="120" r="75" fill="none" stroke="currentColor" className="text-primary/40 animate-spin duration-[40s] origin-center" strokeWidth="2.5" strokeDasharray="12,12" />
 
-                {/* Central brand badge */}
-                <circle cx="120" cy="120" r="28" className="fill-card stroke-border" strokeWidth="1" />
-                <text x="120" y="117" textAnchor="middle" className="text-[10px] font-black fill-primary uppercase leading-none font-sans">Nirogi</text>
-                <text x="120" y="129" textAnchor="middle" className="text-[8px] font-bold fill-muted-foreground uppercase leading-none font-sans">Ecosystem</text>
+                {/* Central brand badge -> Links to /about */}
+                <Link href="/about" className="cursor-pointer group">
+                  <g className="transition-transform duration-300 hover:scale-105">
+                    <circle cx="120" cy="120" r="28" className="fill-card stroke-border group-hover:stroke-primary group-hover:fill-primary/10 transition-all duration-300" strokeWidth="1.5" />
+                    <text x="120" y="117" textAnchor="middle" className="text-[10px] font-black fill-primary uppercase leading-none font-sans group-hover:fill-primary">Nirogi</text>
+                    <text x="120" y="129" textAnchor="middle" className="text-[8px] font-bold fill-muted-foreground uppercase leading-none font-sans group-hover:fill-foreground">Ecosystem</text>
+                  </g>
+                </Link>
 
-                {/* Node 1: Clinical (Top) */}
-                <g className="translate-y-[-10px]">
-                  <circle cx="120" cy="45" r="22" className="fill-card stroke-border hover:stroke-primary transition-all duration-300" strokeWidth="1.5" />
-                  <circle cx="120" cy="45" r="16" className="fill-primary/10 text-primary" />
-                  <path d="M120 37v16M112 45h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-primary" />
-                  <text x="120" y="78" textAnchor="middle" className="text-[8px] font-extrabold fill-foreground uppercase tracking-wide">MD Doctors</text>
-                </g>
+                {/* Node 1: Clinical (Top) -> Links to /doctors */}
+                <Link href="/doctors" className="cursor-pointer group">
+                  <g className="translate-y-[-10px] transition-transform duration-300 hover:scale-110">
+                    <circle cx="120" cy="45" r="22" className="fill-card stroke-border group-hover:stroke-emerald-600 group-hover:fill-emerald-500/10 transition-all duration-300 shadow-md" strokeWidth="1.5" />
+                    <circle cx="120" cy="45" r="16" className="fill-primary/10 text-primary group-hover:fill-emerald-600 group-hover:text-white transition-colors" />
+                    <path d="M120 37v16M112 45h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-primary group-hover:text-emerald-600" />
+                    <text x="120" y="78" textAnchor="middle" className="text-[8px] font-extrabold fill-foreground uppercase tracking-wide group-hover:fill-primary group-hover:underline">MD Doctors</text>
+                  </g>
+                </Link>
 
-                {/* Node 2: Yoga (Bottom Right) */}
-                <g className="translate-x-[15px]">
-                  <circle cx="185" cy="158" r="22" className="fill-card stroke-border hover:stroke-amber-500 transition-all duration-300" strokeWidth="1.5" />
-                  <circle cx="185" cy="158" r="16" className="fill-amber-500/10 text-amber-600" />
-                  {/* Small wave path represent yoga */}
-                  <path d="M178 158c3.5-3 5.5-3 9 0s5.5 3 9 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-amber-600" />
-                  <text x="185" y="191" textAnchor="middle" className="text-[8px] font-extrabold fill-foreground uppercase tracking-wide">Yoga Guides</text>
-                </g>
+                {/* Node 2: Yoga (Bottom Right) -> Links to /yoga-experts */}
+                <Link href="/yoga-experts" className="cursor-pointer group">
+                  <g className="translate-x-[15px] transition-transform duration-300 hover:scale-110">
+                    <circle cx="185" cy="158" r="22" className="fill-card stroke-border group-hover:stroke-amber-500 group-hover:fill-amber-500/10 transition-all duration-300 shadow-md" strokeWidth="1.5" />
+                    <circle cx="185" cy="158" r="16" className="fill-amber-500/10 text-amber-600 group-hover:fill-amber-500 group-hover:text-white transition-colors" />
+                    {/* Small wave path represent yoga */}
+                    <path d="M178 158c3.5-3 5.5-3 9 0s5.5 3 9 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-amber-600 group-hover:text-amber-600" />
+                    <text x="185" y="191" textAnchor="middle" className="text-[8px] font-extrabold fill-foreground uppercase tracking-wide group-hover:fill-amber-600 group-hover:underline">Yoga Guides</text>
+                  </g>
+                </Link>
 
-                {/* Node 3: AI diagnostics (Bottom Left) */}
-                <g className="translate-x-[-15px]">
-                  <circle cx="55" cy="158" r="22" className="fill-card stroke-border hover:stroke-blue-500 transition-all duration-300" strokeWidth="1.5" />
-                  <circle cx="55" cy="158" r="16" className="fill-blue-500/10 text-blue-600" />
-                  {/* Small spark star path for AI */}
-                  <path d="M55 150v16M47 158h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-blue-600" />
-                  <text x="55" y="191" textAnchor="middle" className="text-[8px] font-extrabold fill-foreground uppercase tracking-wide">24/7 AI Sync</text>
-                </g>
+                {/* Node 3: AI diagnostics (Bottom Left) -> Links to /ai-dosha-assessment */}
+                <Link href="/ai-dosha-assessment" className="cursor-pointer group">
+                  <g className="translate-x-[-15px] transition-transform duration-300 hover:scale-110">
+                    <circle cx="55" cy="158" r="22" className="fill-card stroke-border group-hover:stroke-blue-500 group-hover:fill-blue-500/10 transition-all duration-300 shadow-md" strokeWidth="1.5" />
+                    <circle cx="55" cy="158" r="16" className="fill-blue-500/10 text-blue-600 group-hover:fill-blue-500 group-hover:text-white transition-colors" />
+                    {/* Small spark star path for AI */}
+                    <path d="M55 150v16M47 158h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-blue-600 group-hover:text-blue-600" />
+                    <text x="55" y="191" textAnchor="middle" className="text-[8px] font-extrabold fill-foreground uppercase tracking-wide group-hover:fill-blue-600 group-hover:underline">24/7 AI Sync</text>
+                  </g>
+                </Link>
               </svg>
             </div>
           </div>

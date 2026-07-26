@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
+import { Loader2, UserPlus } from "lucide-react";
 import AuthFormShell from "@/components/auth/AuthFormShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -121,7 +122,27 @@ const RegisterPage = () => {
           </Select>
           {errors.role && <p className="text-xs status-error">{errors.role.message}</p>}
         </div>
-        <Button type="submit" className="w-full" disabled={isSubmitting}>Create Account</Button>
+        <Button
+          type="submit"
+          className={`w-full h-11 text-xs font-extrabold uppercase tracking-wider rounded-xl transition-all duration-300 shadow-md ${
+            isSubmitting
+              ? "bg-gradient-to-r from-emerald-600 via-primary to-teal-700 text-white shadow-emerald-500/30 animate-pulse scale-[0.99]"
+              : "bg-primary hover:bg-primary/95 text-primary-foreground hover:shadow-lg"
+          }`}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <span className="flex items-center justify-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin text-white" />
+              <span>Creating Account & Provisioning Workspace...</span>
+            </span>
+          ) : (
+            <span className="flex items-center justify-center gap-2">
+              <UserPlus className="h-4 w-4" />
+              <span>Create Account</span>
+            </span>
+          )}
+        </Button>
         {errors.root && <p className="text-xs status-error">{errors.root.message}</p>}
       </form>
     </AuthFormShell>

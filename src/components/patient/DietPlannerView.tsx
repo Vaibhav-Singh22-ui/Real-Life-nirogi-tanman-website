@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Utensils, Flame, Sparkles, Check, Plus, RefreshCw } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/lib/supabase";
 
 interface Meal {
   id: string;
@@ -36,6 +38,7 @@ const ayurvedicSwaps = [
 ];
 
 export default function DietPlannerView() {
+  const { user } = useAuth();
   const [meals, setMeals] = useState<Meal[]>([]);
   const [newMealName, setNewMealName] = useState("");
   const [newMealCal, setNewMealCal] = useState("");
@@ -45,24 +48,56 @@ export default function DietPlannerView() {
   const [newMealType, setNewMealType] = useState<Meal["type"]>("breakfast");
 
   useEffect(() => {
-    const saved = localStorage.getItem("nirogi_diet_meals");
-    if (saved) {
-      try {
-        setMeals(JSON.parse(saved));
-      } catch (e) {
+    const fetchSupabaseDietLogs = async () => {
+      if (user?.id) {
+        try {
+          const { data } = await supabase
+            .from("diet_logs")
+            .select("*")
+            .eq("user_id", user.id)
+            .order("created_at", { ascending: false });
+
+          if (data && data.length > 0) {
+            const mapped: Meal[] = data.map((d) => ({
+              id: d.id.toString(),
+              name: d.meal_name || d.name,
+              calories: d.calories || 0,
+              protein: d.protein || 0,
+              carbs: d.carbs || 0,
+              fat: d.fat || 0,
+              time: d.logged_time || "01:00 PM",
+              completed: d.completed ?? true,
+              type: d.meal_type || "lunch",
+            }));
+            setMeals(mapped);
+            return;
+          }
+        } catch (err) {
+          console.error("Supabase diet fetch error:", err);
+        }
+      }
+
+      const saved = localStorage.getItem("nirogi_diet_meals");
+      if (saved) {
+        try {
+          setMeals(JSON.parse(saved));
+        } catch (e) {
+          setMeals(defaultMeals);
+        }
+      } else {
         setMeals(defaultMeals);
       }
-    } else {
-      setMeals(defaultMeals);
-    }
-  }, []);
+    };
+
+    fetchSupabaseDietLogs();
+  }, [user]);
 
   const saveMeals = (updated: Meal[]) => {
     setMeals(updated);
     localStorage.setItem("nirogi_diet_meals", JSON.stringify(updated));
   };
 
-  const toggleMeal = (id: string) => {
+  const toggleMeal = async (id: string) => {
     const updated = meals.map(m => m.id === id ? { ...m, completed: !m.completed } : m);
     saveMeals(updated);
     const meal = meals.find(m => m.id === id);
@@ -72,10 +107,21 @@ export default function DietPlannerView() {
       } else {
         toast.info(`Removed: ${meal.name}`);
       }
+      
+      if (user?.id) {
+        try {
+          await supabase
+            .from("diet_logs")
+            .update({ completed: !meal.completed })
+            .eq("id", id);
+        } catch (err) {
+          console.error("Supabase meal toggle error:", err);
+        }
+      }
     }
   };
 
-  const handleAddMeal = (e: React.FormEvent) => {
+  const handleAddMeal = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMealName || !newMealCal) {
       toast.error("Please fill in the meal name and calories.");
@@ -94,13 +140,39 @@ export default function DietPlannerView() {
       type: newMealType,
     };
 
+    if (user?.id) {
+      try {
+        const { data, error } = await supabase
+          .from("diet_logs")
+          .insert({
+            user_id: user.id,
+            meal_name: meal.name,
+            calories: meal.calories,
+            protein: meal.protein,
+            carbs: meal.carbs,
+            fat: meal.fat,
+            meal_type: meal.type,
+            logged_time: meal.time,
+            completed: true,
+          })
+          .select()
+          .single();
+
+        if (!error && data) {
+          meal.id = data.id.toString();
+        }
+      } catch (err) {
+        console.error("Supabase diet log insert error:", err);
+      }
+    }
+
     saveMeals([...meals, meal]);
     setNewMealName("");
     setNewMealCal("");
     setNewMealProt("");
     setNewMealCarbs("");
     setNewMealFat("");
-    toast.success(`Added & Logged: ${meal.name}`);
+    toast.success(`Logged meal to database: ${meal.name}`);
   };
 
   const totalCalories = meals.reduce((acc, m) => acc + (m.completed ? m.calories : 0), 0);
