@@ -6,7 +6,7 @@ import { Play, Pause, Volume2, VolumeX, Maximize, Clock, Sparkles, Search, Share
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 
 const videoSessions = [
@@ -19,8 +19,9 @@ const videoSessions = [
     instructorRole: "Spine Specialist",
     instructorAvatar: "NJ",
     desc: "A step-by-step mechanical spine correction routine designed to relieve workspace strain and cervical pressure.",
-    thumb: "/services/yoga_therapy.png",
-    videoUrl: "https://cdn.coverr.co/videos/coverr-woman-doing-yoga-stretches-in-a-park-5683/1080p.mp4",
+    thumb: "/articles/yoga_posture.png",
+    videoUrl: "https://www.pexels.com/download/video/27581871/",
+    backupUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
     views: "14.2k",
     likes: "1.8k",
     uploadDate: "3 days ago",
@@ -34,8 +35,9 @@ const videoSessions = [
     instructorRole: "Breathwork Guide",
     instructorAvatar: "MP",
     desc: "Slow pacing diaphragmatic breathwork triggers parasympathetic vagus nerve stimulation to flatten daily cortisol spikes.",
-    thumb: "/services/ai_assistant.png",
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-woman-doing-yoga-stretches-on-the-beach-40502-large.mp4",
+    thumb: "/articles/dosha_balance.png",
+    videoUrl: "https://www.pexels.com/download/video/32542989/",
+    backupUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
     views: "28.9k",
     likes: "3.4k",
     uploadDate: "1 week ago",
@@ -49,8 +51,9 @@ const videoSessions = [
     instructorRole: "Clinical Nutritionist",
     instructorAvatar: "RI",
     desc: "Ayurvedic culinary preparation guidelines focusing on digestive spices (ginger, cumin, ajwain) to restore metabolic Agni fire.",
-    thumb: "/services/clinical_nutrition.png",
-    videoUrl: "https://cdn.coverr.co/videos/coverr-preparing-healthy-food-ingredients-6059/1080p.mp4",
+    thumb: "/articles/gut_health.png",
+    videoUrl: "https://www.pexels.com/download/video/32132549/",
+    backupUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
     views: "9.5k",
     likes: "1.1k",
     uploadDate: "5 days ago",
@@ -64,15 +67,80 @@ const videoSessions = [
     instructorRole: "Senior Vaidya",
     instructorAvatar: "VS",
     desc: "Ergonomic workspace stretching techniques to open shoulder blades, prevent thoracic kyphosis, and reduce lumbar strain.",
-    thumb: "/services/tele_yoga.png",
-    videoUrl: "https://cdn.coverr.co/videos/coverr-stretching-exercises-in-nature-5412/1080p.mp4",
+    thumb: "https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=800&auto=format&fit=crop",
+    videoUrl: "https://www.pexels.com/download/video/8942648/",
+    backupUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoybacks.mp4",
     views: "32.1k",
     likes: "4.5k",
     uploadDate: "2 weeks ago",
   },
+  {
+    id: "restorative-yoga-nidra",
+    title: "Deep Restorative Yoga Nidra & Sound Bath",
+    category: "Relaxation & Meditation",
+    duration: "25:30",
+    instructor: "Ananya Sharma",
+    instructorRole: "Restorative Therapy Lead",
+    instructorAvatar: "AS",
+    desc: "Guided Savasana body scan relaxation combined with singing bowl harmonics to promote parasympathetic sleep recovery.",
+    thumb: "/articles/yoga_nidra.png",
+    videoUrl: "https://www.pexels.com/download/video/27581871/",
+    backupUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    views: "18.7k",
+    likes: "2.9k",
+    uploadDate: "4 days ago",
+  },
+  {
+    id: "surya-namaskar-vitality",
+    title: "Morning Surya Namaskar Vitality Flow",
+    category: "Yoga Therapy",
+    duration: "12:40",
+    instructor: "Arjun Dev",
+    instructorRole: "Master Practitioner",
+    instructorAvatar: "AD",
+    desc: "12-step dynamic sun salutation sequence designed to ignite cardiovascular circulation, joint mobility, and morning alertness.",
+    thumb: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=800&auto=format&fit=crop",
+    videoUrl: "https://www.pexels.com/download/video/32542989/",
+    backupUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+    views: "41.5k",
+    likes: "5.2k",
+    uploadDate: "1 month ago",
+  },
+  {
+    id: "somatic-anxiety-reset",
+    title: "4-7-8 Somatic Reset for Anxiety Relief",
+    category: "Breathwork",
+    duration: "08:15",
+    instructor: "Mira Patel",
+    instructorRole: "Breathwork Guide",
+    instructorAvatar: "MP",
+    desc: "Rapid autonomic nervous system de-escalation technique to stabilize heart rate spikes and calm muscle tension.",
+    thumb: "/articles/sleep_inflammation.png",
+    videoUrl: "https://www.pexels.com/download/video/32132549/",
+    backupUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+    views: "19.3k",
+    likes: "2.3k",
+    uploadDate: "6 days ago",
+  },
+  {
+    id: "hrv-heart-rate-mastery",
+    title: "Cardio-Metabolic HRV & Heart Rate Mastery",
+    category: "Spine & Ergonomics",
+    duration: "16:10",
+    instructor: "Dr. Rhea Singh",
+    instructorRole: "Lifestyle Medicine",
+    instructorAvatar: "RS",
+    desc: "Heart rate variability tracking, pulse modulation, and aerobic conditioning metrics to optimize athletic and daily recovery.",
+    thumb: "/articles/hrv_recovery.png",
+    videoUrl: "https://www.pexels.com/download/video/8942648/",
+    backupUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+    views: "11.8k",
+    likes: "1.5k",
+    uploadDate: "1 week ago",
+  },
 ];
 
-const categories = ["All", "Yoga Therapy", "Breathwork", "Ayurvedic Cooking", "Spine & Ergonomics"];
+const categories = ["All", "Yoga Therapy", "Breathwork", "Ayurvedic Cooking", "Spine & Ergonomics", "Relaxation & Meditation"];
 
 const VideosPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -99,11 +167,52 @@ const VideosPage = () => {
     return matchesCategory && matchesSearch;
   });
 
+  const [customUrlInput, setCustomUrlInput] = useState("");
+  const [currentVideoSrc, setCurrentVideoSrc] = useState<string>("");
+
+  useEffect(() => {
+    if (activeVideo) {
+      setCurrentVideoSrc(activeVideo.videoUrl);
+      setCustomUrlInput(activeVideo.videoUrl);
+    }
+  }, [activeVideo]);
+
   const handleVideoSelect = (video: (typeof videoSessions)[0]) => {
     setActiveVideo(video);
+    setCurrentVideoSrc(video.videoUrl);
     setIsPlaying(true);
     setProgress(0);
     setHasLiked(false);
+    setTimeout(() => {
+      if (videoRef.current) {
+        videoRef.current.play().catch((err) => {
+          console.log("Autoplay prevented or video loading error:", err);
+        });
+      }
+    }, 150);
+  };
+
+  const handleLoadCustomUrl = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!customUrlInput.trim()) {
+      toast.error("Please enter a valid video stream URL.");
+      return;
+    }
+    setCurrentVideoSrc(customUrlInput);
+    setIsPlaying(true);
+    toast.success("Loaded custom video stream!");
+    setTimeout(() => {
+      if (videoRef.current) {
+        videoRef.current.play().catch(() => {});
+      }
+    }, 150);
+  };
+
+  const handleVideoError = () => {
+    if (activeVideo?.backupUrl && currentVideoSrc !== activeVideo.backupUrl) {
+      toast.info("Switching to backup high-definition video stream...");
+      setCurrentVideoSrc(activeVideo.backupUrl);
+    }
   };
 
   const togglePlayPause = () => {
@@ -304,6 +413,7 @@ const VideosPage = () => {
       <Dialog open={!!activeVideo} onOpenChange={() => setActiveVideo(null)}>
         {activeVideo && (
           <DialogContent className="sm:max-w-5xl bg-[#0F0F0F] text-white p-0 rounded-3xl border border-gray-800 shadow-2xl overflow-hidden max-h-[95vh]">
+            <DialogTitle className="sr-only">{activeVideo.title}</DialogTitle>
             <div className="flex flex-col lg:flex-row h-full max-h-[90vh] overflow-y-auto">
               
               {/* MAIN THEATER PLAYER AREA */}
@@ -312,10 +422,12 @@ const VideosPage = () => {
                 <div className="relative aspect-video w-full bg-black group flex items-center justify-center">
                   <video
                     ref={videoRef}
-                    src={activeVideo.videoUrl}
+                    src={currentVideoSrc || activeVideo.videoUrl}
                     poster={activeVideo.thumb}
                     autoPlay
+                    controls
                     playsInline
+                    onError={handleVideoError}
                     onTimeUpdate={handleTimeUpdate}
                     onClick={togglePlayPause}
                     className="w-full h-full object-contain cursor-pointer"
@@ -362,13 +474,28 @@ const VideosPage = () => {
 
                 {/* VIDEO DETAILS UNDER PLAYER */}
                 <div className="p-5 space-y-4 bg-[#0F0F0F]">
-                  <div>
-                    <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight">
-                      {activeVideo.title}
-                    </h2>
-                    <p className="text-xs text-gray-400 mt-1 font-normal">
-                      {activeVideo.views} views • Uploaded {activeVideo.uploadDate} • {activeVideo.category}
-                    </p>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-800 pb-3">
+                    <div>
+                      <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight">
+                        {activeVideo.title}
+                      </h2>
+                      <p className="text-xs text-gray-400 mt-1 font-normal">
+                        {activeVideo.views} views • Uploaded {activeVideo.uploadDate} • {activeVideo.category}
+                      </p>
+                    </div>
+
+                    {/* CUSTOM VIDEO URL INPUT BAR */}
+                    <form onSubmit={handleLoadCustomUrl} className="flex items-center gap-2 w-full sm:w-auto">
+                      <Input
+                        placeholder="Paste Pexels or MP4 video URL..."
+                        value={customUrlInput}
+                        onChange={(e) => setCustomUrlInput(e.target.value)}
+                        className="text-xs h-8 bg-gray-900 border-gray-700 text-white placeholder:text-gray-500 w-full sm:w-60"
+                      />
+                      <Button type="submit" size="sm" className="h-8 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shrink-0">
+                        Load Video
+                      </Button>
+                    </form>
                   </div>
 
                   {/* INSTRUCTOR / CHANNEL & ACTIONS BAR */}
