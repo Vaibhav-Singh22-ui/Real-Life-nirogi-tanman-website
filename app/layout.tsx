@@ -18,6 +18,13 @@ import { LoadingScreen } from "@/components/layout/LoadingScreen";
 export const metadata: Metadata = {
   title: "Nirogi Tanman | AI Integrative Healthcare",
   description: "Move from reactive care to proactive wellness. Personalized care journeys across clinical medicine, nutrition, yoga therapy, and AI assistant.",
+  icons: {
+    icon: [
+      { url: "/Logo.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/Logo.svg",
+    apple: "/Logo.svg",
+  },
 };
 
 export default function RootLayout({

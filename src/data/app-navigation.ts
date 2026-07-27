@@ -180,9 +180,11 @@ export const yogaSidebarGroups: NavGroup[] = [
 
 export const patientSidebarGroups: NavGroup[] = [
   {
-    groupLabel: "Overview",
+    groupLabel: "Overview & AI Care",
     items: [
       { label: "Dashboard", path: "/patient/dashboard", icon: LayoutDashboard },
+      { label: "AI Dosha Assessment", path: "/patient/ai-dosha-assessment", icon: Sparkles },
+      { label: "AI Assistant", path: "/patient/ai-assistant", icon: Brain },
       { label: "Bookings", path: "/patient/bookings", icon: Calendar },
     ],
   },
